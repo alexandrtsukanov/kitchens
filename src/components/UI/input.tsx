@@ -23,7 +23,7 @@ const Input = memo(
         validate,
     }: IProps) => {
         return (
-            <TextField name={name} type={type} validate={() => validate?.(value)}>
+            <TextField name={name} type={type} validate={(value) => validate?.(value)}>
                 <Label>{label}</Label>
                 <DefaultInput
                     onChange={onChange}
