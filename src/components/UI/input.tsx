@@ -1,3 +1,5 @@
+'use client';
+
 import { ChangeEvent, memo } from "react";
 import { TextField, Label, Input as DefaultInput, FieldError } from "@heroui/react";
 import { TValidate } from "@/model";

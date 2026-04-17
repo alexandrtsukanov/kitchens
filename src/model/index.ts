@@ -1,2 +1,1 @@
-export type { INavbarItem } from './app';
-export type { TValidate } from './app';
+export type { INavbarItem, IUserHeaderAction, TValidate } from './app';

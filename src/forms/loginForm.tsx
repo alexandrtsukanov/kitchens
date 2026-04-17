@@ -3,16 +3,11 @@
 import { Button, Form } from "@heroui/react";
 import { ChangeEvent, SyntheticEvent, useCallback, useState } from "react";
 import Input from "@/components/UI/input";
-import { registrationConfig } from "@/config/registration.config";
+import { formsConfig } from "@/config/forms.config";
 
-interface IProps {
-    onClose: () => void;
-}
-
-const RegistrationForm = ({ onClose }: IProps) => {
+const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [passwordConfirmation, setPasswordConfirmation] = useState('');
 
     const changeEmail = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -22,37 +17,27 @@ const RegistrationForm = ({ onClose }: IProps) => {
         setPassword(event.target.value);
     }, []);
 
-    const changePasswordConfirmation = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        setPasswordConfirmation(event.target.value);
-    }, []);
-
     const validateEmail = useCallback((value: string) => {
-        const emailRegexp = registrationConfig.emailRegexp;
+        const emailRegexp = formsConfig.emailRegexp;
 
         if (emailRegexp.test(value)) {
             return true;
         }
 
-        return registrationConfig.incorrectEmailMsg;
+        return formsConfig.incorrectEmailMsg;
     }, []);
 
     const validatePassword = useCallback((value: string) => {
         if (!value) {
-            return registrationConfig.noPassworsMsg;
+            return formsConfig.noPassworsMsg;
         }
             
-        if (value.length < registrationConfig.passwordMinLength) {
-            return registrationConfig.shortPasswordMsg;
+        if (value.length < formsConfig.passwordMinLength) {
+            return formsConfig.shortPasswordMsg;
         }
 
         return true;
     }, []);
-
-    const validatePasswordConfirmation = useCallback((value: string) => {
-        if (password !== value) return registrationConfig.passwordNotConfirmedMsg;
-        
-        return true;
-    }, [password]);
 
     const handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -61,19 +46,19 @@ const RegistrationForm = ({ onClose }: IProps) => {
     };
     
     return (
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} className="px-1 py-4 flex flex-col gap-4">
             <Input
-                label="Enter your emai"
+                label="Enter your email"
                 name="email"
                 onChange={changeEmail}
-                placeholder="Enter your email..."
+                placeholder=""
                 type="email"
                 validate={validateEmail}
                 value={email}
             />
 
             <Input
-                label="Create a password"
+                label="Enter your password"
                 name="password"
                 onChange={changePassword}
                 placeholder=""
@@ -82,19 +67,9 @@ const RegistrationForm = ({ onClose }: IProps) => {
                 value={password}
             />
 
-            <Input
-                label="Confirm the password"
-                name="password"
-                onChange={changePasswordConfirmation}
-                placeholder=""
-                type="password"
-                validate={validatePasswordConfirmation}
-                value={passwordConfirmation}
-            />
-
-            <Button type="submit">Submit</Button>
+            <Button type="submit">Log in</Button>
         </Form>
     );
 }
 
-export default RegistrationForm;
+export default LoginForm;

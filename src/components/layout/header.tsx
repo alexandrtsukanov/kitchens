@@ -6,16 +6,12 @@ import { INavbarItem } from "@/model";
 import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site.config";
 import { layoutConfig } from "@/config/layout.config";
+import UserHeaderActions from "./userHeaderActions";
 
 const navbarItems: INavbarItem[] = [
     { href: '/', label: 'Recipes' },
     { href: '/ingredients', label: 'Ingredients' }, 
     { href: '/about', label: 'About' }, 
-];
-
-const userActions: INavbarItem[] = [
-    { href: '/signup', label: 'Sign Up' },
-    { href: '/login', label: 'Log In' }, 
 ];
 
 const Logo = () => (
@@ -32,8 +28,11 @@ const Header = () => {
     const pathname = usePathname();
 
     return (
-        <nav className={`sticky top-0 z-40 w-full border-b border-separator bg-background/70 backdrop-blur-lg h-[${layoutConfig.headerHeight}]`}>
-            <header className="flex h-16 items-center justify-between px-6">
+        <nav className="sticky top-0 z-40 w-full border-b border-separator bg-background/70 backdrop-blur-lg">
+            <header
+                className="flex items-center justify-between px-6"
+                style={{ height: layoutConfig.headerHeight }}
+            >
                 <Link href="/" className="flex items-center gap-2 no-underline">
                     <Logo />
                     <p className="font-bold">{siteConfig.title}</p>
@@ -62,13 +61,7 @@ const Header = () => {
                     })}
                 </ul>
 
-                <ul className="flex items-center gap-4">
-                    {userActions.map(({ href, label }) => {
-                        return (
-                            <Link href={href} key={href}>{label}</Link>
-                        )
-                    })}
-                </ul>
+                <UserHeaderActions />
             </header>
         </nav>
     )

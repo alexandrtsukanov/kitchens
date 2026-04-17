@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import Header from "@/components/UI/header";
+import Header from "@/components/layout/header";
 import { siteConfig } from "@/config/site.config";
 import { layoutConfig } from "@/config/layout.config";
 
@@ -35,10 +35,7 @@ export default function RootLayout({
         <Header />
 
         <main
-          className={`
-            flex flex-col
-            w-full justify-start items-center
-          `}
+          className="flex flex-col w-full justify-start items-center"
           style={{
             height: `calc(100vh - ${layoutConfig.headerHeight} - ${layoutConfig.footerHeight})`
           }}
@@ -46,7 +43,7 @@ export default function RootLayout({
           {children}
         </main>
 
-        <footer className={`flex justify-center items-center h-[${layoutConfig.footerHeight}]`}>
+        <footer className="flex justify-center items-center" style={{ height: layoutConfig.footerHeight }}>
           <p>{siteConfig.description}</p>
         </footer>
       </body>
