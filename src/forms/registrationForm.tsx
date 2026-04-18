@@ -4,6 +4,7 @@ import { Button, Form } from "@heroui/react";
 import { ChangeEvent, SyntheticEvent, useCallback, useState } from "react";
 import Input from "@/components/UI/input";
 import { formsConfig } from "@/config/forms.config";
+import { createUser } from "@/actions";
 
 interface IProps {
     onClose: () => void;
@@ -54,10 +55,13 @@ const RegistrationForm = ({ onClose }: IProps) => {
         return true;
     }, [password]);
 
-    const handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        console.log("Form submitted");
+        const createUserResult = await createUser({ email, password })
+        console.log('createUserResult =>', createUserResult);
+
+        onClose();
     };
     
     return (

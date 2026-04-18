@@ -13,3 +13,8 @@ export interface IUserHeaderAction {
 }
 
 export type TValidate = (value: string) => true | ValidationError | null | undefined;
+
+export interface IUser {
+    email: string;
+    password: string;
+}
