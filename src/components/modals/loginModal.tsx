@@ -1,5 +1,5 @@
 import Modal from "../UI/modal";
-import LoginForm from "@/forms/loginForm";
+import LoginForm from "@/components/forms/loginForm";
 
 interface IProps {
     isOpen: boolean;
@@ -9,7 +9,7 @@ interface IProps {
 const LoginModal = ({ isOpen, onClose }: IProps) => {
     return (
         <Modal isOpen={isOpen} onOpenChange={onClose} header="Log in">
-            <LoginForm />
+            <LoginForm onClose={onClose} />
         </Modal>
     );
 };

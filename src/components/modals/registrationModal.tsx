@@ -1,4 +1,4 @@
-import RegistrationForm from "@/forms/registrationForm";
+import RegistrationForm from "@/components/forms/registrationForm";
 import Modal from "../UI/modal";
 
 interface IProps {

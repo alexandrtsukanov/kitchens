@@ -3,8 +3,9 @@
 import { Button, Form } from "@heroui/react";
 import { ChangeEvent, SyntheticEvent, useCallback, useState } from "react";
 import Input from "@/components/UI/input";
-import { formsConfig } from "@/config/forms.config";
+import { formsConfig } from "@/config";
 import { createUser } from "@/actions";
+import { loginUser } from "@/actions/login";
 
 interface IProps {
     onClose: () => void;
@@ -14,6 +15,7 @@ const RegistrationForm = ({ onClose }: IProps) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
     const changeEmail = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -58,49 +60,62 @@ const RegistrationForm = ({ onClose }: IProps) => {
     const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const createUserResult = await createUser({ email, password })
-        console.log('createUserResult =>', createUserResult);
+        const createdUser = await createUser(email, password);
+
+        console.log('createUserResult =>', createdUser);
+
+        if (createdUser.status && createdUser.status === 'error') {
+            setError(createdUser.message);
+
+            return;
+        }
+
+        await loginUser(email, password);
 
         onClose();
     };
     
     return (
-        <Form onSubmit={handleSubmit} className="px-1 py-4 flex flex-col gap-4">
-            <Input
-                label="Enter your email"
-                name="email"
-                onChange={changeEmail}
-                placeholder=""
-                type="email"
-                validate={validateEmail}
-                value={email}
-            />
+        <>
+            {!!error && <p style={{ color: 'red' }}>{error}</p>}
 
-            <Input
-                label="Create a password"
-                name="password"
-                onChange={changePassword}
-                placeholder=""
-                type="password"
-                validate={validatePassword}
-                value={password}
-            />
+            <Form onSubmit={handleSubmit} className="px-1 py-4 flex flex-col gap-4">
+                <Input
+                    label="Enter your email"
+                    name="email"
+                    onChange={changeEmail}
+                    placeholder=""
+                    type="email"
+                    validate={validateEmail}
+                    value={email}
+                />
 
-            <Input
-                label="Confirm the password"
-                name="password"
-                onChange={changePasswordConfirmation}
-                placeholder=""
-                type="password"
-                validate={validatePasswordConfirmation}
-                value={passwordConfirmation}
-            />
+                <Input
+                    label="Create a password"
+                    name="password"
+                    onChange={changePassword}
+                    placeholder=""
+                    type="password"
+                    validate={validatePassword}
+                    value={password}
+                />
 
-            <div className="flex gap-2">
-                <Button type="submit">Sign up</Button>
-                <Button onPress={onClose} variant="secondary">Cancel</Button>
-            </div>
-        </Form>
+                <Input
+                    label="Confirm the password"
+                    name="password"
+                    onChange={changePasswordConfirmation}
+                    placeholder=""
+                    type="password"
+                    validate={validatePasswordConfirmation}
+                    value={passwordConfirmation}
+                />
+
+                <div className="flex gap-2">
+                    <Button type="submit">Sign up</Button>
+                    <Button onPress={onClose} variant="secondary">Cancel</Button>
+                </div>
+            </Form>
+        </>
     );
 }
 
