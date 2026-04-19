@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/components/layout/header";
 import { siteConfig, layoutConfig } from "@/config";
 import Providers from "@/providers";
+import AuthObserver from "@/hocs/authObserver";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,19 +34,21 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Providers>
-          <Header />
-          <main
-            className="flex flex-col w-full justify-start items-center"
-            style={{
-              height: `calc(100vh - ${layoutConfig.headerHeight} - ${layoutConfig.footerHeight})`
-            }}
-          >
-            {children}
-          </main>
+          <AuthObserver>
+            <Header />
+            <main
+              className="flex flex-col w-full justify-start items-center"
+              style={{
+                height: `calc(100vh - ${layoutConfig.headerHeight} - ${layoutConfig.footerHeight})`
+              }}
+            >
+              {children}
+            </main>
 
-          <footer className="flex justify-center items-center" style={{ height: layoutConfig.footerHeight }}>
-            <p>{siteConfig.description}</p>
-          </footer>
+            <footer className="flex justify-center items-center" style={{ height: layoutConfig.footerHeight }}>
+              <p>{siteConfig.description}</p>
+            </footer>
+          </AuthObserver>
         </Providers>
       </body>
     </html>
