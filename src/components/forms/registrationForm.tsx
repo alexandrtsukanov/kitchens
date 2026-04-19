@@ -4,7 +4,7 @@ import { Button, Form } from "@heroui/react";
 import { ChangeEvent, SyntheticEvent, useCallback, useState } from "react";
 import Input from "@/components/UI/input";
 import { formsConfig } from "@/config";
-import { createUser } from "@/app/api/auth/signup/route";
+import { createUser } from "@/actions/signup";
 import { loginUser } from "@/actions/login";
 
 interface IProps {
@@ -70,8 +70,15 @@ const RegistrationForm = ({ onClose }: IProps) => {
             return;
         }
 
-        await loginUser(email, password);
+        const loginResult = await loginUser(email, password);
 
+        if (loginResult && loginResult.status && loginResult.status === 'error') {
+            setError(loginResult.message);
+
+            return;
+        }
+
+        window.location.reload();
         onClose();
     };
     

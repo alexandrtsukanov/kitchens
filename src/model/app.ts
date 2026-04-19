@@ -1,9 +1,14 @@
 import { ValidationError } from "next/dist/compiled/amphtml-validator";
 
-export interface INavbarItem {
+interface INavbarItem {
     href: string;
     label: string;
+    content: string;
 }
+
+type TPage = 'index' | 'ingredients' | 'about';
+
+export type TPages = Record<TPage, INavbarItem>;
 
 export interface IUserHeaderAction {
     value: string;

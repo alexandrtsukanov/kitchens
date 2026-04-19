@@ -3,23 +3,23 @@ import { Session } from "next-auth";
 import { create } from "zustand";
 
 interface IAuthState {
-    state: {
+    authState: {
         isAuth: boolean;
         status: TSessionStatus;
         session: Session | null;
     };
-    setState: (status: TSessionStatus, session: Session | null) => void;
+    setAuthState: (status: TSessionStatus, session: Session | null) => void;
 }
 
 export const useAuthState = create<IAuthState>((set) => ({
-    state: {
+    authState: {
         isAuth: false,
-        status: 'unauthenticated',
+        status: 'loading',
         session: null,
     },
-    setState: (status: TSessionStatus, session: Session | null) => {
+    setAuthState: (status: TSessionStatus, session: Session | null) => {
         set({
-            state: {
+            authState: {
                 isAuth: status === 'authenticated',
                 status,
                 session,

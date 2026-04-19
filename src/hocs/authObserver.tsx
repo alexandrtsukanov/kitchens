@@ -10,10 +10,13 @@ interface IProps {
 
 const AuthObserver = ({ children }: IProps) => {
     const { data: session, status } = useSession();
-    const { setState } = useAuthState();
+    const { setAuthState } = useAuthState();
+
+    console.log('session =>', session);
+    console.log('status =>', status);
 
     useEffect(() => {
-        setState(status, session);
+        setAuthState(status, session);
     }, [status, session]);
 
     return (

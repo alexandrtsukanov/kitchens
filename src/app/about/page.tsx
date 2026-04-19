@@ -1,6 +1,10 @@
+import { siteConfig } from "@/config";
+
 const About = () => {
     return (
-        <h1>ABOUT</h1>
+        <div>
+            <p>{siteConfig.navbarItems.about.content}</p>
+        </div>
     )
 }
 

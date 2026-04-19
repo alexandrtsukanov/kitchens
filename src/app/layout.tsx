@@ -6,51 +6,54 @@ import Header from "@/components/layout/header";
 import { siteConfig, layoutConfig } from "@/config";
 import Providers from "@/providers";
 import AuthObserver from "@/hocs/authObserver";
+import Title from "@/components/layout/title";
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+    variable: "--font-geist-sans",
+    subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+    variable: "--font-geist-mono",
+    subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: siteConfig.title,
-  description: siteConfig.description,
+    title: siteConfig.title,
+    description: siteConfig.description,
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        <Providers>
-          <AuthObserver>
-            <Header />
-            <main
-              className="flex flex-col w-full justify-start items-center"
-              style={{
-                height: `calc(100vh - ${layoutConfig.headerHeight} - ${layoutConfig.footerHeight})`
-              }}
-            >
-              {children}
-            </main>
+    return (
+        <html
+            lang="en"
+            className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+        >
+            <body className="min-h-full flex flex-col">
+                <Providers>
+                    <AuthObserver>
+                        <Header />
+                        <Title />
 
-            <footer className="flex justify-center items-center" style={{ height: layoutConfig.footerHeight }}>
-              <p>{siteConfig.description}</p>
-            </footer>
-          </AuthObserver>
-        </Providers>
-      </body>
-    </html>
-  );
+                        <main
+                            className="flex flex-col w-full justify-start items-center"
+                            style={{
+                                height: `calc(100vh - ${layoutConfig.headerHeight} - ${layoutConfig.footerHeight})`
+                            }}
+                        >
+                            {children}
+                        </main>
+
+                        <footer className="flex justify-center items-center" style={{ height: layoutConfig.footerHeight }}>
+                            <p>{siteConfig.description}</p>
+                        </footer>
+                    </AuthObserver>
+                </Providers>
+            </body>
+        </html>
+    );
 }

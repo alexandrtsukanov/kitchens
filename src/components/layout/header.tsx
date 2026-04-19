@@ -2,17 +2,10 @@
 
 import { Link } from "@heroui/react";
 import Image from "next/image";
-import { INavbarItem } from "@/model";
 import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site.config";
 import { layoutConfig } from "@/config/layout.config";
 import UserHeaderActions from "./userHeaderActions";
-
-const navbarItems: INavbarItem[] = [
-    { href: '/', label: 'Recipes' },
-    { href: '/ingredients', label: 'Ingredients' }, 
-    { href: '/about', label: 'About' }, 
-];
 
 const Logo = () => (
     <Image
@@ -39,7 +32,7 @@ const Header = () => {
                 </Link>
 
                 <ul className="flex items-center gap-4">
-                    {navbarItems.map(({ href, label }) => {
+                    {Object.values(siteConfig.navbarItems).map(({ href, label }) => {
                         const isActive = href === pathname;
 
                         return (

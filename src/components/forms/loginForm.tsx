@@ -4,7 +4,7 @@ import { Button, Form } from "@heroui/react";
 import { ChangeEvent, SyntheticEvent, useCallback, useState } from "react";
 import Input from "@/components/UI/input";
 import { formsConfig } from "@/config/forms.config";
-import { loginUser } from "@/app/api/auth/session/route";
+import { loginUser } from "@/actions/login";
 
 interface IProps {
     onClose: () => void;
