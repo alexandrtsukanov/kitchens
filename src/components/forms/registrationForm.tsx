@@ -4,7 +4,7 @@ import { Button, Form } from "@heroui/react";
 import { ChangeEvent, SyntheticEvent, useCallback, useState } from "react";
 import Input from "@/components/UI/input";
 import { formsConfig } from "@/config";
-import { createUser } from "@/actions";
+import { createUser } from "@/app/api/auth/signup/route";
 import { loginUser } from "@/actions/login";
 
 interface IProps {
@@ -43,7 +43,7 @@ const RegistrationForm = ({ onClose }: IProps) => {
         if (!value) {
             return formsConfig.noPassworsMsg;
         }
-            
+
         if (value.length < formsConfig.passwordMinLength) {
             return formsConfig.shortPasswordMsg;
         }

@@ -45,12 +45,12 @@ const Header = () => {
                         return (
                             <Link
                                 className={`px-3 py-1
-                                    ${isActive ? "text-blue-500" : "text-foreground"}
-                                    hover:text-blue-300 hover:border
-                                    hover:border-blue-300 hover:rounded-md
-                                    transition-colors
-                                    transition-border
-                                    duration-200`
+                                  ${isActive ? "text-blue-500" : "text-foreground"}
+                                  hover:text-blue-300 hover:border
+                                  hover:border-blue-300 hover:rounded-md
+                                  transition-colors
+                                  transition-border
+                                  duration-200`
                                 }
                                 href={href}
                                 key={href}

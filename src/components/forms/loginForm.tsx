@@ -4,7 +4,7 @@ import { Button, Form } from "@heroui/react";
 import { ChangeEvent, SyntheticEvent, useCallback, useState } from "react";
 import Input from "@/components/UI/input";
 import { formsConfig } from "@/config/forms.config";
-import { loginUser } from "@/actions/login";
+import { loginUser } from "@/app/api/auth/session/route";
 
 interface IProps {
     onClose: () => void;
@@ -52,18 +52,19 @@ const LoginForm = ({ onClose }: IProps) => {
 
         console.log('loginResult =>', loginResult);
 
-        if (loginResult.status && loginResult.status === 'error') {
+        if (loginResult && loginResult.status && loginResult.status === 'error') {
             setError(loginResult.message);
 
             return;
         }
 
+        window.location.reload();
         onClose();
     };
     
     return (
         <>
-            {!!error && <p className="color=red">{error}</p>}
+            {!!error && <p style={{ color: 'red' }}>{error}</p>}
 
             <Form onSubmit={handleSubmit} className="px-1 py-4 flex flex-col gap-4">
                 <Input
