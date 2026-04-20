@@ -48,7 +48,7 @@ const IngredientsTable = memo(() => {
                             <DefaultTable.Cell>{row.price ? `${row.price} RUB` : '-'}</DefaultTable.Cell>
                             <DefaultTable.Cell>{row.description ?? '-'}</DefaultTable.Cell>
                             <DefaultTable.Cell>
-                                <Button onPress={() => deleteIngredient(row.id)} variant="secondary">Remove</Button>
+                                <Button onPress={() => deleteIngredient(row.id)} variant="danger">Remove</Button>
                             </DefaultTable.Cell>
                         </DefaultTable.Row>
                     ))}

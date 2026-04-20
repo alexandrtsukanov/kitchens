@@ -36,23 +36,19 @@ export default function RootLayout({
             <body className="min-h-full flex flex-col">
                 <Providers>
                     <AuthObserver>
-                        <Header />
+                        <div className="flex min-h-screen flex-col justify-between">
+                            <div className="flex flex-col">
+                                <Header />
+                                <main className="flex flex-col w-full justify-start items-center">
+                                    <Title />
+                                    {children}
+                                </main>
+                            </div>
 
-                        <div>
-                            <main
-                                className="flex flex-col w-full justify-start items-center"
-                                style={{
-                                    height: `calc(100vh - ${layoutConfig.headerHeight} - ${layoutConfig.footerHeight})`
-                                }}
-                            >
-                                <Title />
-                                {children}
-                            </main>
+                            <footer className="flex justify-center items-center" style={{ height: layoutConfig.footerHeight }}>
+                                <p>{siteConfig.description}</p>
+                            </footer>
                         </div>
-
-                        <footer className="flex justify-center items-center" style={{ height: layoutConfig.footerHeight }}>
-                            <p>{siteConfig.description}</p>
-                        </footer>
                     </AuthObserver>
                 </Providers>
             </body>

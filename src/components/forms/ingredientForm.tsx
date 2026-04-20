@@ -90,7 +90,7 @@ const IngredientForm = () => {
     };
 
     return (
-        <Form onSubmit={handleSubmit} className="w-[560px] px-1 py-4 flex flex-col gap-4">
+        <Form onSubmit={handleSubmit} className="w-full px-1 py-4 flex flex-col gap-4">
             {!!error && <p className="text-red-500 mb-4">{error}</p>}
 
             <Input
