@@ -4,23 +4,24 @@ interface ISiteConfig {
     title: string;
     description: string;
     navbarItems: TPages,
+    notFoundContent: string;
 }
 
 export const siteConfig: ISiteConfig = {
     title: "Tatar kitchen",
     description: "Tatar kitchen recipes",
     navbarItems: {
-        index:  {
+        '/':  {
             href: '/',
             label: 'Recipes',
-            content: 'Recipes Recipes Recipes Recipes Recipes',
+            content: 'Recipes',
         },
-        ingredients: {
+        '/ingredients': {
             href: '/ingredients',
             label: 'Ingredients',
-            content: 'Ingredients Ingredients Ingredients Ingredients Ingredients',
+            content: 'Choose Ingredients',
         },
-        about: {
+        '/about': {
             href:'/about',
             label: 'About',
             content: `
@@ -35,6 +36,7 @@ export const siteConfig: ISiteConfig = {
                 пюре или пшенной каши. Их едят горячими, смазывая маслом. Шулпа (суп) - наваристый бульон с кусочками мяса, 
                 картофелем и домашней лапшой.
             `
-        }, 
+        },
     },
+    notFoundContent: 'Oops, we did not found requested information'
 };

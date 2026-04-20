@@ -7,4 +7,7 @@ export const formsConfig = {
     passwordMinLength: 6,
     passwordMaxLength: 32,
     incorrectPasswordMsg: 'Password must contain at least one digit and one latin letter',
+    ingredientsNameRequired: 'Name is required',
+    ingredientsPriceRequired: 'Price is required',
+    ingredientsPricePositive: 'Price must be positive',
 };

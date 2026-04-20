@@ -1,9 +1,11 @@
-import { siteConfig } from "@/config";
+import IngredientForm from "@/components/forms/ingredientForm";
+import Content from "@/components/layout/content";
 
 const Ingredients = () => {
     return (  
         <div>
-            <p>{siteConfig.navbarItems.ingredients.content}</p>
+            <Content />
+            <IngredientForm />
         </div>
     )
 }

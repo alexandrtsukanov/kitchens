@@ -4,7 +4,7 @@ import { Button, Form } from "@heroui/react";
 import { ChangeEvent, SyntheticEvent, useCallback, useState } from "react";
 import Input from "@/components/UI/input";
 import { formsConfig } from "@/config/forms.config";
-import { loginUser } from "@/actions/login";
+import { loginUserCommon } from "@/utils/login";
 
 interface IProps {
     onClose: () => void;
@@ -48,18 +48,12 @@ const LoginForm = ({ onClose }: IProps) => {
     const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const loginResult = await loginUser(email, password);
-
-        console.log('loginResult =>', loginResult);
-
-        if (loginResult && loginResult.status && loginResult.status === 'error') {
-            setError(loginResult.message);
-
-            return;
-        }
-
-        window.location.reload();
-        onClose();
+        loginUserCommon({
+            email,
+            password,
+            errorHandler: setError,
+            closeHandler: onClose,
+        });
     };
     
     return (

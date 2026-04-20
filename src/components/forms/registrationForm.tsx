@@ -5,7 +5,7 @@ import { ChangeEvent, SyntheticEvent, useCallback, useState } from "react";
 import Input from "@/components/UI/input";
 import { formsConfig } from "@/config";
 import { createUser } from "@/actions/signup";
-import { loginUser } from "@/actions/login";
+import { loginUserCommon } from "@/utils/login";
 
 interface IProps {
     onClose: () => void;
@@ -70,16 +70,12 @@ const RegistrationForm = ({ onClose }: IProps) => {
             return;
         }
 
-        const loginResult = await loginUser(email, password);
-
-        if (loginResult && loginResult.status && loginResult.status === 'error') {
-            setError(loginResult.message);
-
-            return;
-        }
-
-        window.location.reload();
-        onClose();
+        loginUserCommon({
+            email,
+            password,
+            errorHandler: setError,
+            closeHandler: onClose,
+        });
     };
     
     return (

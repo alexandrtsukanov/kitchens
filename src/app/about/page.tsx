@@ -1,9 +1,9 @@
-import { siteConfig } from "@/config";
+import Content from "@/components/layout/content";
 
 const About = () => {
     return (
         <div>
-            <p>{siteConfig.navbarItems.about.content}</p>
+            <Content />
         </div>
     )
 }

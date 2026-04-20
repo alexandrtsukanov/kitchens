@@ -6,7 +6,7 @@ import Header from "@/components/layout/header";
 import { siteConfig, layoutConfig } from "@/config";
 import Providers from "@/providers";
 import AuthObserver from "@/hocs/authObserver";
-import Title from "@/components/layout/title";
+import Title from "@/components/layout/content";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -37,7 +37,6 @@ export default function RootLayout({
                 <Providers>
                     <AuthObserver>
                         <Header />
-                        <Title />
 
                         <main
                             className="flex flex-col w-full justify-start items-center"

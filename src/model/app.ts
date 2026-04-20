@@ -6,7 +6,7 @@ interface INavbarItem {
     content: string;
 }
 
-type TPage = 'index' | 'ingredients' | 'about';
+export type TPage = '/' | '/ingredients' | '/about';
 
 export type TPages = Record<TPage, INavbarItem>;
 
@@ -22,4 +22,9 @@ export type TValidate = (value: string) => true | ValidationError | null | undef
 export interface IUser {
     email: string;
     password: string;
+}
+
+export interface IOption {
+    value: string;
+    label: string;
 }
