@@ -4,18 +4,17 @@ import { siteConfig } from "@/config";
 import { TPage } from "@/model";
 import { usePathname } from "next/navigation";
 
-const Content = () => {
+const Title = () => {
     const pathname = usePathname();
 
     const currentPathItem = siteConfig.navbarItems[pathname as TPage];
-;
-    const content = currentPathItem ? currentPathItem.content : siteConfig.notFoundContent;
+    const title = currentPathItem ? currentPathItem.label : siteConfig.title;
 
     return (
-        <div>
-            <p className="px-6">{content}</p>
+        <div className="w-full flex justify-center px-6 mt-6 mb-12">
+            <h1 className="text-3xl font-bold">{title}</h1>
         </div>
     );
 };
 
-export default Content;
+export default Title;

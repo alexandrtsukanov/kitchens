@@ -8,18 +8,18 @@ interface IIngredientsState {
         error: string | null;
         isLoading: boolean;
     };
-    getIngredients: () => Promise<void>;
+    setIngredients: () => Promise<void>;
     addIngredient: (ingredientsFormData: IIngredientForm) => Promise<void>;
     removeIngredient: (id: string) => Promise<void>;
 }
 
-export const useAuthState = create<IIngredientsState>((set) => ({
+export const useIngredientsState = create<IIngredientsState>((set) => ({
     ingredientsState: {
         data: [],
         error: null,
         isLoading: false,
     },
-    getIngredients: async () => {
+    setIngredients: async () => {
         set(prev => ({ ...prev, ingredientsState: { ...prev.ingredientsState, isLoading: true, error: null } }));
 
         try {
@@ -29,7 +29,12 @@ export const useAuthState = create<IIngredientsState>((set) => ({
                 throw new Error(allIngredientsResponse.message ?? 'Error');
             }
 
-            set(prev => ({ ...prev, ingredientsState: { ...prev.ingredientsState, data: allIngredientsResponse.data } }));
+            set(prev => ({
+                ...prev,
+                ingredientsState: {
+                    ...prev.ingredientsState,
+                    data: allIngredientsResponse.data }
+                }));
         } catch(err) {
             const error = err as Error;
             set(prev => ({ ...prev, ingredientsState: { ...prev.ingredientsState, error: error.message } }));
@@ -49,7 +54,12 @@ export const useAuthState = create<IIngredientsState>((set) => ({
 
             const { data: newIngredient } = newIngredientResponse;
 
-            set(prev => ({ ...prev, ingredientsState: { ...prev.ingredientsState, data: [...prev.ingredientsState.data, newIngredient] } }));
+            set(prev => ({
+                ...prev,
+                ingredientsState: {
+                    ...prev.ingredientsState,
+                    data: [...prev.ingredientsState.data, newIngredient] }
+                }));
         } catch(err) {
             const error = err as Error;
             set(prev => ({ ...prev, ingredientsState: { ...prev.ingredientsState, error: error.message } }));

@@ -1,3 +1,5 @@
+'use client';
+
 import Content from "@/components/layout/content";
 
 const About = () => {

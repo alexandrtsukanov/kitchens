@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuthState } from "@/store/auth";
+import { useIngredientsState } from "@/store/ingredients";
 import { useSession } from "next-auth/react";
 import { ReactNode, useEffect } from "react";
 
@@ -10,7 +11,8 @@ interface IProps {
 
 const AuthObserver = ({ children }: IProps) => {
     const { data: session, status } = useSession();
-    const { setAuthState } = useAuthState();
+    const { setAuthState, authState: { isAuth } } = useAuthState();
+    const { setIngredients } = useIngredientsState();
 
     console.log('session =>', session);
     console.log('status =>', status);
@@ -18,6 +20,12 @@ const AuthObserver = ({ children }: IProps) => {
     useEffect(() => {
         setAuthState(status, session);
     }, [status, session]);
+
+    useEffect(() => {
+        if (isAuth) {
+            setIngredients();
+        }
+    }, [isAuth]);
 
     return (
         <>{children}</>

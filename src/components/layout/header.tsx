@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site.config";
 import { layoutConfig } from "@/config/layout.config";
 import UserHeaderActions from "./userHeaderActions";
+import { useAuthState } from "@/store/auth";
+import { useMemo } from "react";
 
 const Logo = () => (
     <Image
@@ -19,7 +21,19 @@ const Logo = () => (
 
 const Header = () => {
     const pathname = usePathname();
+    const { authState: { isAuth } } = useAuthState();
 
+    const actualNavbarItems = useMemo(() => {
+        return Object.values(siteConfig.navbarItems)
+            .filter(item => {
+                if (item.href === '/ingredients') {
+                    return isAuth;
+                }
+                
+                return true;
+            });
+    }, [isAuth]);
+        
     return (
         <nav className="sticky top-0 z-40 w-full border-b border-separator bg-background/70 backdrop-blur-lg">
             <header
@@ -32,7 +46,7 @@ const Header = () => {
                 </Link>
 
                 <ul className="flex items-center gap-4">
-                    {Object.values(siteConfig.navbarItems).map(({ href, label }) => {
+                    {actualNavbarItems.map(({ href, label }) => {
                         const isActive = href === pathname;
 
                         return (

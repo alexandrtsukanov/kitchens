@@ -5,6 +5,8 @@ interface ISiteConfig {
     description: string;
     navbarItems: TPages,
     notFoundContent: string;
+    ingredientsTableHeaderItems: string[],
+    errorMessageKey: string,
 }
 
 export const siteConfig: ISiteConfig = {
@@ -38,5 +40,14 @@ export const siteConfig: ISiteConfig = {
             `
         },
     },
-    notFoundContent: 'Oops, we did not found requested information'
+    notFoundContent: 'Oops, we did not found requested information',
+    ingredientsTableHeaderItems: [
+        'Name',
+        'Category',
+        'Unit',
+        'Price per unit',
+        'Description',
+        'Actions',
+    ],
+    errorMessageKey: 'message',
 };

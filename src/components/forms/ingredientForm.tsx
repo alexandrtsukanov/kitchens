@@ -6,8 +6,8 @@ import { IIngredientForm } from "@/model";
 import Input from "../UI/input";
 import { formsConfig } from "@/config";
 import { CATEGORY_OPTIONS, UNIT_OPTIONS } from "@/consts/ingredients";
-import { createIngredient } from "@/actions";
 import Select from "../UI/select";
+import { useIngredientsState } from "@/store/ingredients";
 
 const initFormData: IIngredientForm = {
     name: '',
@@ -20,6 +20,8 @@ const initFormData: IIngredientForm = {
 const IngredientForm = () => {
     const [formData, setFormData] = useState<IIngredientForm>(initFormData);
     const [error, setError] = useState<string | null>(null);
+
+    const { addIngredient, ingredientsState: { error: ingrError } } = useIngredientsState();
 
     const changeName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         setFormData(prev => ({ ...prev, name: event.target.value }));
@@ -71,10 +73,10 @@ const IngredientForm = () => {
         event.preventDefault();
 
         startTransition(async () => {
-            const newIngredient = await createIngredient(formData);
+            await addIngredient(formData);
     
-            if (newIngredient.status && newIngredient.status === 'error') {
-                setError(newIngredient.message);
+            if (!!ingrError) {
+                setError(ingrError);
 
                 return;
             } else {
@@ -90,6 +92,7 @@ const IngredientForm = () => {
     return (
         <Form onSubmit={handleSubmit} className="w-[560px] px-1 py-4 flex flex-col gap-4">
             {!!error && <p className="text-red-500 mb-4">{error}</p>}
+
             <Input
                 label="Ingredient name"
                 name="name"

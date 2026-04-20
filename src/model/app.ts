@@ -1,12 +1,12 @@
 import { ValidationError } from "next/dist/compiled/amphtml-validator";
 
+export type TPage = '/' | '/ingredients' | '/about';
+
 interface INavbarItem {
-    href: string;
+    href: TPage;
     label: string;
     content: string;
 }
-
-export type TPage = '/' | '/ingredients' | '/about';
 
 export type TPages = Record<TPage, INavbarItem>;
 
