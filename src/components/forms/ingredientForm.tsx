@@ -1,11 +1,13 @@
 'use client';
 
-import { Button, Form, Select } from "@heroui/react";
+import { Button, Form } from "@heroui/react";
 import { ChangeEvent, SyntheticEvent, useCallback, useState } from "react";
 import { IIngredientForm } from "@/model";
 import Input from "../UI/input";
 import { formsConfig } from "@/config";
 import { CATEGORY_OPTIONS, UNIT_OPTIONS } from "@/consts/ingredients";
+import { createIngredient } from "@/actions";
+import Select from "../UI/select";
 
 const initFormData: IIngredientForm = {
     name: '',
@@ -30,8 +32,16 @@ const IngredientForm = () => {
         return true;
     }, []);
 
+    const changeCategory = useCallback((value: string) => {
+        setFormData(prev => ({ ...prev, category: value }));
+    }, []);
+
+    const changeUnit = useCallback((value: string) => {
+        setFormData(prev => ({ ...prev, unit: value }));
+    }, []);
+
     const changePrice = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value ? parseFloat(event.target.value) : null;
+        const value = !event.target.value || isNaN(parseFloat(event.target.value)) ? null : parseFloat(event.target.value)
 
         setFormData(prev => ({ ...prev, price: value }));
     }, []);
@@ -51,41 +61,45 @@ const IngredientForm = () => {
     }, []);
 
     const changeDescription = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        setFormData(prev => ({ ...prev, name: event.target.value }));
+        setFormData(prev => ({ ...prev, description: event.target.value }));
     }, []);
 
     const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
+        const result = await createIngredient(formData);
+
         setFormData(initFormData);
 
         console.log('Form submitted');
     };
 
     return (
-        <Form onSubmit={handleSubmit} className="w-[400px] px-1 py-4 flex flex-col gap-4">
+        <Form onSubmit={handleSubmit} className="w-[560px] px-1 py-4 flex flex-col gap-4">
             <Input
-                label="Enter ingredient name"
+                label="Ingredient name"
                 name="name"
                 onChange={changeName}
-                placeholder=""
+                placeholder="nter ingredient name"
                 validate={validateName}
                 value={formData.name}
             />
 
             <div className="flex gap-4 w-full">
                 <div className="w-1/3">
-                    <Select>
-                        {CATEGORY_OPTIONS.map(({ value, label }) => (
-                            <div key={value} className="text-black">{label}</div>
-                        ))}
-                    </Select>
+                    <Select
+                        options={CATEGORY_OPTIONS}
+                        label="Category"
+                        onChange={changeCategory}    
+                        value={formData.category}
+                    />
                 </div>
                 <div className="w-1/3">
-                    <Select>
-                        {UNIT_OPTIONS.map(({ value, label }) => (
-                            <div key={value} className="text-black">{label}</div>
-                        ))}
-                    </Select>                  
+                    <Select
+                        options={UNIT_OPTIONS}
+                        label="Unit"
+                        onChange={changeUnit}    
+                        value={formData.unit}
+                    />
                 </div>
                 <div className="w-1/3">
                     <Input

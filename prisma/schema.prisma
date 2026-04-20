@@ -13,7 +13,7 @@ model User {
     email      String     @unique
     password   String
     createdAt  DateTime   @default(now()) @map("created_at")
-    updatedAt  DateTime   @default(now()) @map("updated_at")
+    updatedAt  DateTime   @updatedAt @map("updated_at")
     accounts   Account[]
     sessions   Session[]
 
@@ -57,4 +57,34 @@ model VerificationToken {
   
     @@unique([identifier, token])
     @@map("verification_tokens")
+}
+
+model Ingredient {
+    id              String     @unique @id @default(uuid())
+    name            String
+    category        Category
+    unit            Unit
+    price           Float?
+    description     String?
+    createdAt       DateTime   @default(now()) @map("created_at")
+    updatedAt       DateTime   @updatedAt @map("updated_at")
+
+    @@map("ingredients")
+}
+
+enum Category {
+    VEGETABLES
+    FRUITS
+    MEAT
+    DAIRY
+    SPICES
+    OTHER
+}
+
+enum Unit {
+    KILOGRAMS
+    GRAMS
+    LITERS
+    MILLILITERS
+    PIECES
 }
