@@ -9,12 +9,13 @@ interface IProps {
     label: string;
     onChange: (value: string) => void;
     value: string;
+    placeholder?: string;
 }
 
-const Select = memo(({ options, label, onChange, value }: IProps) => {
+const Select = memo(({ options, label, onChange, value, placeholder = 'Select ...' }: IProps) => {
     return (
         // @ts-ignore
-        <DeafultSelect onChange={onChange} value={value}>
+        <DeafultSelect onChange={onChange} value={value} placeholder={placeholder}>
             <Label>{label}</Label>
 
             <DeafultSelect.Trigger className="rounded-lg border bg-surface p-2">

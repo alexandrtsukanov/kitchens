@@ -18,7 +18,7 @@ export const createUser = async (email: string, password: string) => {
             throw new Error(authConfig.registreredUserExistsMsg);
         }
 
-        const hashedPassword = await saltAndHashPassword(password)
+        const hashedPassword = await saltAndHashPassword(password);
 
         const newUser = await prisma.user.create({
             data: { email, password: hashedPassword },

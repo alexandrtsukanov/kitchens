@@ -68,6 +68,8 @@ const RegistrationForm = ({ onClose }: IProps) => {
             setError(createdUser.message);
 
             return;
+        } else {
+            setError(null);
         }
 
         loginUserCommon({
@@ -80,14 +82,14 @@ const RegistrationForm = ({ onClose }: IProps) => {
     
     return (
         <>
-            {!!error && <p style={{ color: 'red' }}>{error}</p>}
+            {!!error && <p className="text-red-500 mb-4">{error}</p>}
 
             <Form onSubmit={handleSubmit} className="px-1 py-4 flex flex-col gap-4">
                 <Input
                     label="Enter your email"
                     name="email"
                     onChange={changeEmail}
-                    placeholder=""
+                    placeholder="email"
                     type="email"
                     validate={validateEmail}
                     value={email}
@@ -97,7 +99,7 @@ const RegistrationForm = ({ onClose }: IProps) => {
                     label="Create a password"
                     name="password"
                     onChange={changePassword}
-                    placeholder=""
+                    placeholder="password"
                     type="password"
                     validate={validatePassword}
                     value={password}
@@ -107,7 +109,7 @@ const RegistrationForm = ({ onClose }: IProps) => {
                     label="Confirm the password"
                     name="password"
                     onChange={changePasswordConfirmation}
-                    placeholder=""
+                    placeholder="password"
                     type="password"
                     validate={validatePasswordConfirmation}
                     value={passwordConfirmation}

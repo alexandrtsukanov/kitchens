@@ -58,7 +58,7 @@ const LoginForm = ({ onClose }: IProps) => {
     
     return (
         <>
-            {!!error && <p style={{ color: 'red' }}>{error}</p>}
+            {!!error && <p className="text-red-500 mb-4">{error}</p>}
 
             <Form onSubmit={handleSubmit} className="px-1 py-4 flex flex-col gap-4">
                 <Input

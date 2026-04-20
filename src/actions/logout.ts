@@ -5,7 +5,6 @@ import { signOut } from "@/auth/auth";
 export const logoutUser = async () => {
     try {
         const singOutResult = await signOut({ redirect: false });
-        console.log(singOutResult);
 
         return singOutResult;
     } catch (e) {

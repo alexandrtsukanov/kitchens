@@ -5,7 +5,7 @@ import { loginUser } from "@/actions";
 interface IParams {
     email: string;
     password: string;
-    errorHandler: (message: string) => void;
+    errorHandler: (message: string | null) => void;
     closeHandler: () => void;
 }
 
@@ -21,6 +21,8 @@ export async function loginUserCommon({
         errorHandler(loginResult.message);
 
         return;
+    } else {
+        errorHandler(null);
     }
 
     window.location.reload();

@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Form } from "@heroui/react";
-import { ChangeEvent, SyntheticEvent, useCallback, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useCallback, useState, useTransition } from "react";
 import { IIngredientForm } from "@/model";
 import Input from "../UI/input";
 import { formsConfig } from "@/config";
@@ -19,6 +19,7 @@ const initFormData: IIngredientForm = {
 
 const IngredientForm = () => {
     const [formData, setFormData] = useState<IIngredientForm>(initFormData);
+    const [error, setError] = useState<string | null>(null);
 
     const changeName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         setFormData(prev => ({ ...prev, name: event.target.value }));
@@ -64,22 +65,36 @@ const IngredientForm = () => {
         setFormData(prev => ({ ...prev, description: event.target.value }));
     }, []);
 
+    const [isPending, startTransition] = useTransition();
+
     const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const result = await createIngredient(formData);
 
-        setFormData(initFormData);
+        startTransition(async () => {
+            const newIngredient = await createIngredient(formData);
+    
+            if (newIngredient.status && newIngredient.status === 'error') {
+                setError(newIngredient.message);
 
-        console.log('Form submitted');
+                return;
+            } else {
+                setError(null);
+            }
+            
+            setFormData(initFormData);
+    
+            console.log('Form submitted');
+        });
     };
 
     return (
         <Form onSubmit={handleSubmit} className="w-[560px] px-1 py-4 flex flex-col gap-4">
+            {!!error && <p className="text-red-500 mb-4">{error}</p>}
             <Input
                 label="Ingredient name"
                 name="name"
                 onChange={changeName}
-                placeholder="nter ingredient name"
+                placeholder="enter ingredient name"
                 validate={validateName}
                 value={formData.name}
             />
@@ -91,6 +106,7 @@ const IngredientForm = () => {
                         label="Category"
                         onChange={changeCategory}    
                         value={formData.category}
+                        placeholder="select category"
                     />
                 </div>
                 <div className="w-1/3">
@@ -99,6 +115,7 @@ const IngredientForm = () => {
                         label="Unit"
                         onChange={changeUnit}    
                         value={formData.unit}
+                        placeholder="select unit"
                     />
                 </div>
                 <div className="w-1/3">
@@ -121,7 +138,7 @@ const IngredientForm = () => {
                 value={formData.description}
             />
     
-            <Button type="submit">Add ingredient</Button>
+            <Button type="submit" isPending={isPending}>Add ingredient</Button>
         </Form>
     )
 }
