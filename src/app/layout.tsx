@@ -5,7 +5,7 @@ import "./globals.css";
 import Header from "@/components/layout/header";
 import { siteConfig, layoutConfig } from "@/config";
 import Providers from "@/providers";
-import AuthObserver from "@/hocs/authObserver";
+import Loader from "@/hocs/loader";
 import Title from "@/components/layout/title";
 
 const geistSans = Geist({
@@ -35,7 +35,7 @@ export default function RootLayout({
         >
             <body className="min-h-full flex flex-col">
                 <Providers>
-                    <AuthObserver>
+                    <Loader>
                         <div className="flex min-h-screen flex-col justify-between">
                             <div className="flex flex-col">
                                 <Header />
@@ -49,7 +49,7 @@ export default function RootLayout({
                                 <p>{siteConfig.description}</p>
                             </footer>
                         </div>
-                    </AuthObserver>
+                    </Loader>
                 </Providers>
             </body>
         </html>

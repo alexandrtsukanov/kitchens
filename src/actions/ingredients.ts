@@ -9,7 +9,7 @@ export const createIngredient = async (formData: IIngredientForm) => {
        const validatedIngredientsData = ingredientsSchema.parse(formData);
        const newIngredient = await prisma.ingredient.create({ data: validatedIngredientsData });
 
-       return { data: newIngredient };
+       return { status: 'ok', data: newIngredient };
     } catch(err) {
         console.error(err);
         const error = err as Error;
@@ -26,7 +26,7 @@ export const getIngredients = async () => {
     try {
         const result = await prisma.ingredient.findMany();
 
-        return { data: result };
+        return { status: 'ok', data: result };
     } catch(err) {
         console.error(err);
         const error = err as Error;
@@ -41,9 +41,9 @@ export const getIngredients = async () => {
 
 export const removeIngredient = async (id: string) => {
     try {
-        const ingredientToDelete = await prisma.ingredient.delete({ where: { id } });
+        const deletedIngredient = await prisma.ingredient.delete({ where: { id } });
 
-        return { data: ingredientToDelete };
+        return { status: 'ok', data: deletedIngredient };
     } catch(err) {
         console.error(err);
         const error = err as Error;

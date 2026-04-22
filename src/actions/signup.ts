@@ -26,7 +26,7 @@ export const createUser = async (email: string, password: string) => {
 
         console.log('newUser =>', newUser);
 
-        return { newUser };
+        return { data: newUser, status: 'ok' };
     } catch (e) {
         console.error('error =>', e);
 
@@ -35,6 +35,7 @@ export const createUser = async (email: string, password: string) => {
         return {
             status: 'error',
             message: error.message,
+            data: null,
         }
     }
 }

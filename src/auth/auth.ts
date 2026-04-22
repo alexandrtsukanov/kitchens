@@ -37,7 +37,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             
                     return { id: user.id, email: user.email };
                 } catch (error) {
-                    return null;
+                    const ownError = error as Error;
+        
+                    throw new Error(ownError.message);
                 }
             }
         }),

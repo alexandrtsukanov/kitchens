@@ -10,4 +10,5 @@ export const formsConfig = {
     ingredientsNameRequired: 'Name is required',
     ingredientsPriceRequired: 'Price is required',
     ingredientsPricePositive: 'Price must be positive',
+    recipeErrorMsg: 'Recipe must have name and ingredients',
 };
