@@ -25,6 +25,7 @@ const UserHeaderActions = () => {
         try {
             await logoutUser();
             setAuthState('unauthenticated', null);
+            window.location.reload();
         } catch(e) {
             const error = e as Error;
             setError(error.message)
@@ -35,7 +36,7 @@ const UserHeaderActions = () => {
 
     if (isAuth) {
         userActions = [
-            { value: 'logout', label: 'Log Out', variant: 'secondary', onPress: logout  }, 
+            { value: 'logout', label: 'Log Out', variant: 'secondary', onPress: logout }, 
         ]
     } else {
         userActions = [

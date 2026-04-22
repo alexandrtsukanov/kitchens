@@ -7,6 +7,7 @@ interface ISiteConfig {
     notFoundContent: string;
     ingredientsTableHeaderItems: string[],
     errorMessageKey: string,
+    permissionDeniedMsg: string,
 }
 
 export const siteConfig: ISiteConfig = {
@@ -50,4 +51,5 @@ export const siteConfig: ISiteConfig = {
         'Actions',
     ],
     errorMessageKey: 'message',
+    permissionDeniedMsg: '403 not available',
 };

@@ -12,7 +12,7 @@ export async function proxy(request: NextRequest) {
     if (protectedRoutes.some(route => pathname.toString().startsWith(route))) {
         if (!token) {
             const url = new URL('/error', request.url);
-            url.searchParams.set(siteConfig.errorMessageKey, '403 not available');
+            url.searchParams.set(siteConfig.errorMessageKey, siteConfig.permissionDeniedMsg);
             return NextResponse.redirect(url);
         }
     }
