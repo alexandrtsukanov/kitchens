@@ -6,11 +6,12 @@ import { CATEGORY_OPTIONS, UNIT_OPTIONS } from "@/consts/ingredients";
 import { useIngredientsState } from "@/store/ingredients";
 import { getlabel } from "@/utils/app";
 import { Button, Table as DefaultTable } from "@heroui/react";
-import { useAuthState } from "@/store/auth";
 
 const IngredientsTable = memo(() => {
     const { ingredientsState: { data, isLoading }, removeIngredient } = useIngredientsState();
-    const { authState: { isAuth } } = useAuthState();
+
+    console.log('ingredients =>', data);
+    
 
     const deleteIngredient = async (id: string) => {
         await removeIngredient(id);

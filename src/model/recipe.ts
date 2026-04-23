@@ -16,5 +16,7 @@ export interface IRecipeForm {
 
 export type TRecipe = Omit<IRecipeForm, 'imageUrl'> & {
     id: string;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
     imageUrl: string | null;
 };

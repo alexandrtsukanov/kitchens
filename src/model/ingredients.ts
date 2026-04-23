@@ -8,5 +8,7 @@ export interface IIngredientForm {
 
 export type TIngredient = Omit<IIngredientForm, 'description'> & {
     id: string;
+    createdAt: Date | string;
+    updatedAt: Date | string;
     description: string | null;
 };

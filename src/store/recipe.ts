@@ -25,6 +25,7 @@ export const useRecipesState = create<IRecipesState>((set) => ({
 
         try {
             const allRecipesResponse = await getRecipes();
+            const { data } = allRecipesResponse
 
             if (allRecipesResponse.status === 'error') {
                 throw new Error(allRecipesResponse.message ?? 'Error');
@@ -34,8 +35,9 @@ export const useRecipesState = create<IRecipesState>((set) => ({
                 ...prev,
                 recipesState: {
                     ...prev.recipesState,
-                    data: allRecipesResponse.data }
-                }));
+                    data: data,
+                }
+            }));
         } catch(err) {
             const error = err as Error;
             set(prev => ({ ...prev, recipesState: { ...prev.recipesState, error: error.message } }));
@@ -53,13 +55,13 @@ export const useRecipesState = create<IRecipesState>((set) => ({
                 throw new Error(newRecipeResponse.message ?? 'Error');
             }
 
-            const { data: newIngredient } = newRecipeResponse;
+            const { data: newRecipe } = newRecipeResponse;
 
             set(prev => ({
                 ...prev,
                 recipesState: {
                     ...prev.recipesState,
-                    data: [...prev.recipesState.data, newIngredient] }
+                    data: [...prev.recipesState.data, newRecipe as TRecipe] }
                 }));
         } catch(err) {
             const error = err as Error;
@@ -84,7 +86,7 @@ export const useRecipesState = create<IRecipesState>((set) => ({
                 ...prev,
                 recipesState: {
                     ...prev.recipesState,
-                    data: prev.recipesState.data.map(recipe => recipe.id === updatedRecipe.id ? updatedRecipe : recipe) },
+                    data: prev.recipesState.data.map(recipe => recipe.id === updatedRecipe.id ? updatedRecipe as TRecipe : recipe) },
             }));
         } catch(err) {
             const error = err as Error;

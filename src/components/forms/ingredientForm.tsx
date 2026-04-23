@@ -44,7 +44,7 @@ const IngredientForm = () => {
     }, []);
 
     const changePrice = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        const value = !event.target.value || isNaN(parseFloat(event.target.value)) ? null : parseFloat(event.target.value)
+        const value = !event.target.value || isNaN(parseFloat(event.target.value)) ? null : parseFloat(event.target.value);
 
         setFormData(prev => ({ ...prev, price: value }));
     }, []);

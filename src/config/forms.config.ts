@@ -8,7 +8,10 @@ export const formsConfig = {
     passwordMaxLength: 32,
     incorrectPasswordMsg: 'Password must contain at least one digit and one latin letter',
     ingredientsNameRequired: 'Name is required',
+    recipeNameRequired: 'Name is required',
     ingredientsPriceRequired: 'Price is required',
     ingredientsPricePositive: 'Price must be positive',
     recipeErrorMsg: 'Recipe must have name and ingredients',
+    maxIngredientsPerRecipe: 10,
+    quantityMustBeNumber: 'quantity must be number',
 };
