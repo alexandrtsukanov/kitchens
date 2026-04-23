@@ -64,7 +64,7 @@ const IngredientAndQuantityForm = memo(({
                     label="Amount"
                     name="number"
                     onChange={onOwnQuantityChange}
-                    placeholder=""
+                    placeholder="amount"
                     validate={validateQuantity}
                     value={quantityValue}                       
                 />

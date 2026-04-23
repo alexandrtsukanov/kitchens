@@ -28,6 +28,24 @@ export async function getRecipes() {
     }
 }
 
+export async function getRecipe(id: string) {
+    try {
+        const recipe = await prisma.recipe.findUnique({
+            where: { id },
+        });
+
+        return { status: 'ok', data: recipe };
+    } catch (error) {
+        const err = error as Error;
+
+        return {
+            status: 'error',
+            message: err.message,
+            data: null,
+        }
+    }
+};
+
 export async function createRecipe(recipeData: IRecipeForm) {
     try {
         const data: Omit<IRecipeForm, 'ingredients'> = {

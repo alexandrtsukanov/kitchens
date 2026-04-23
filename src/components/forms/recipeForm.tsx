@@ -1,12 +1,14 @@
 'use client';
 
 import { Button, Form } from "@heroui/react";
-import { ChangeEvent, SyntheticEvent, useCallback, useMemo, useState, useTransition } from "react";
+import { ChangeEvent, SyntheticEvent, useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import Input from "../UI/input";
 import { formsConfig } from "@/config";
 import { IRecipeForm } from "@/model/recipe";
 import IngredientAndQuantityForm from "../layout/IngredientAndQuantityForm";
 import { useRecipesState } from "@/store/recipe";
+import { usePathname } from "next/navigation";
+import { getRecipe } from "@/actions/recipes";
 
 const initFormData: IRecipeForm = {
     name: '',
@@ -20,7 +22,33 @@ const RecipeForm = () => {
     const [ingredients, setIngredients] = useState([{ ingredientId: '', quantity: 1, formId: Math.random() }]);
     const [error, setError] = useState<string | null>(null);
 
-    const { addRecipe, recipesState: { error: recipeError } } = useRecipesState();
+    const pathname = usePathname();
+    const isNew = pathname.includes('/new');
+
+    const { addRecipe, updateRecipe, recipesState: { error: recipeError } } = useRecipesState();
+
+    useEffect(() => {
+        if (isNew) return;
+
+        try {
+            const getEditingRecipe = async () => {
+                const recipeId = getRecipeIdFromUrl(pathname);
+                const recipe = await getRecipe(recipeId);
+
+                if (recipe.status === 'error' || !recipe.data) {
+                    setError(recipe.message ?? '');
+                } else {
+                    setError(null);
+                    setFormData(recipe.data);
+                }
+            }
+
+            getEditingRecipe();
+        } catch (error) {
+            const ownError = error as Error;
+            setError(ownError.message);
+        }
+    }, []);
 
     const changeIngredient = useCallback((id: number, value: string) => {
         setIngredients(prev => prev.map(ingr => ingr.formId === id ? { ...ingr, ingredientId: value } : ingr));
@@ -80,7 +108,12 @@ const RecipeForm = () => {
         event.preventDefault();
 
         startTransition(async () => {
-            await addRecipe(formData);
+            if (!isNew) {
+                const recipeId = getRecipeIdFromUrl(pathname);
+                await updateRecipe(recipeId, formData);
+            } else {
+                await addRecipe(formData);
+            }
     
             if (!!recipeError) {
                 setError(recipeError);
@@ -144,6 +177,17 @@ const RecipeForm = () => {
             />
 
             {ingredientsRendered}
+
+            {isNew
+                ? (
+                    <Button type="submit" isPending={isPending}>Add recipe</Button>
+                ) : (
+                    <>
+                        <Button type="submit" isPending={isPending}>Save</Button>
+                        <Button isPending={isPending} onPress={() => navigate('/')}>Cancel</Button>
+                    </>
+                )
+            }
 
             <Button type="submit" isPending={isPending}>Add recipe</Button>
         </Form>
