@@ -4,11 +4,13 @@ import { Button, Form } from "@heroui/react";
 import { ChangeEvent, SyntheticEvent, useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import Input from "../UI/input";
 import { formsConfig } from "@/config";
-import { IRecipeForm } from "@/model/recipe";
+import { IRecipeForm, IRecipeIngredient } from "@/model";
 import IngredientAndQuantityForm from "../layout/IngredientAndQuantityForm";
 import { useRecipesState } from "@/store/recipe";
 import { usePathname } from "next/navigation";
 import { getRecipe } from "@/actions/recipes";
+import { TIngredient } from "@/model";
+import { useIngredientsState } from "@/store/ingredients";
 
 const initFormData: IRecipeForm = {
     name: '',
@@ -17,15 +19,31 @@ const initFormData: IRecipeForm = {
     ingredients: [],
 }
 
+type IRecipeIngridientForm = Pick<IRecipeIngredient, 'quantity'> & {
+    formId: number;
+    ingredientId: string | null;
+    ingredient: TIngredient | null;
+};
+
+const mapIngredient = (rawIngredient: IRecipeIngridientForm): IRecipeIngredient | null => {
+    const { ingredient, ingredientId, quantity } = rawIngredient;
+    if (!ingredient || !ingredientId) return null;
+
+    return { ingredient, ingredientId, quantity };
+}
+
 const RecipeForm = () => {
     const [formData, setFormData] = useState<IRecipeForm>(initFormData);
-    const [ingredients, setIngredients] = useState([{ ingredientId: '', quantity: 1, formId: Math.random() }]);
     const [error, setError] = useState<string | null>(null);
+    const [ingredients, setIngredients] = useState<IRecipeIngridientForm[]>([
+        { ingredientId: null, ingredient: null, quantity: 1, formId: Math.random() },
+    ]);
 
     const pathname = usePathname();
     const isNew = pathname.includes('/new');
 
     const { addRecipe, updateRecipe, recipesState: { error: recipeError } } = useRecipesState();
+    const { ingredientsState: { data: allIngredients } } = useIngredientsState();
 
     useEffect(() => {
         if (isNew) return;
@@ -51,7 +69,11 @@ const RecipeForm = () => {
     }, []);
 
     const changeIngredient = useCallback((id: number, value: string) => {
-        setIngredients(prev => prev.map(ingr => ingr.formId === id ? { ...ingr, ingredientId: value } : ingr));
+        const ingredient = allIngredients.find(ingr => ingr.id === value);
+
+        if (!ingredient) return;
+
+        setIngredients(prev => prev.map(ingr => ingr.formId === id ? { ...ingr, ingredientId: value, ingredient } : ingr));
     }, []);
 
     const changeQuantity = useCallback((id: number, value: number) => {
@@ -102,17 +124,31 @@ const RecipeForm = () => {
 
     const [isPending, startTransition] = useTransition();
 
-    const isAddingIngredientsDisabled = ingredients.length === formsConfig.maxIngredientsPerRecipe;
+    const isAddingIngredientsDisabled = ingredients.length >= formsConfig.maxIngredientsPerRecipe;
 
     const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         startTransition(async () => {
-            if (!isNew) {
+            if (isNew) {
+                const validatedIngredients = ingredients
+                    .map(mapIngredient)
+                    .filter(Boolean)
+
+                if (!validatedIngredients.length) {
+                    setError('Recipe cannot be without ingredients');
+                    return;
+                } else {
+                    setError(null);
+                }
+
+                await addRecipe({
+                    ...formData,
+                    ingredients: validatedIngredients as IRecipeIngredient[],
+                });
+            } else {
                 const recipeId = getRecipeIdFromUrl(pathname);
                 await updateRecipe(recipeId, formData);
-            } else {
-                await addRecipe(formData);
             }
     
             if (!!recipeError) {
@@ -142,7 +178,6 @@ const RecipeForm = () => {
                         validateQuantity={validateQuantity}
                     />
                 ))}
-                <Button onPress={addIngredient} isDisabled={isAddingIngredientsDisabled}>+</Button>
             </div>
         )
     }, [ingredients, addIngredient]);
@@ -177,6 +212,8 @@ const RecipeForm = () => {
             />
 
             {ingredientsRendered}
+
+            <Button onPress={addIngredient} isDisabled={isAddingIngredientsDisabled}>+</Button>
 
             {isNew
                 ? (

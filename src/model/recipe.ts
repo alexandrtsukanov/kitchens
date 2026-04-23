@@ -1,7 +1,7 @@
 import { TIngredient } from "./ingredients";
 
-interface IRecipeIngredient {
-    id: string;
+export interface IRecipeIngredient {
+    id?: string;
     ingredientId: string;
     ingredient: TIngredient;
     quantity: number;
