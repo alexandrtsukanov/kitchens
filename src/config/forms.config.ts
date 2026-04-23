@@ -14,4 +14,5 @@ export const formsConfig = {
     recipeErrorMsg: 'Recipe must have name and ingredients',
     maxIngredientsPerRecipe: 10,
     quantityMustBeNumber: 'quantity must be number',
+    noIngredientsMsg: 'Recipe cannot be without ingredients',
 };

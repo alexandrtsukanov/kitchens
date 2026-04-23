@@ -1,9 +1,11 @@
+'use client';
+
+import { useRouter } from "next/navigation";
 import { IRecipeForm } from "@/model/recipe";
 import { useAuthState } from "@/store/auth";
 import { useRecipesState } from "@/store/recipe";
 import { Button, Card } from "@heroui/react";
 import Image from "next/image";
-import { useState } from "react";
 
 interface IProps extends IRecipeForm { id: string };
 
@@ -16,6 +18,8 @@ const RecipeCard = ({
 }: IProps) => {
     const { removeRecipe } = useRecipesState();
     const { authState: { isAuth } } = useAuthState();
+
+    const router = useRouter();
 
     const onRemoveRecipe = () => {
         removeRecipe(id);
@@ -39,7 +43,7 @@ const RecipeCard = ({
 
             {isAuth && (
                 <Card.Footer>
-                    <Button onPress={() => navigate(`/recipes/${id}`)}>Edit</Button>
+                    <Button onPress={() => router.push(`/recipes/${id}`)}>Edit</Button>
                     <Button onPress={onRemoveRecipe} variant="danger-soft">Remove</Button>
                 </Card.Footer>
             )}

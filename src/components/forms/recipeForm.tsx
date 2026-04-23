@@ -4,10 +4,10 @@ import { Button, Form } from "@heroui/react";
 import { ChangeEvent, SyntheticEvent, useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import Input from "../UI/input";
 import { formsConfig } from "@/config";
-import { IRecipeForm, IRecipeIngredient, NotNullableProps } from "@/model";
+import { IRecipeForm, IRecipeIngredient } from "@/model";
 import IngredientAndQuantityForm from "../layout/IngredientAndQuantityForm";
 import { useRecipesState } from "@/store/recipe";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams, useRouter } from "next/navigation";
 import { getRecipe } from "@/actions/recipes";
 import { TIngredient } from "@/model";
 import { useIngredientsState } from "@/store/ingredients";
@@ -21,7 +21,6 @@ const initFormData: IRecipeForm = {
 
 type IRecipeIngridientForm = Pick<IRecipeIngredient, 'quantity' | 'ingredientId'> & {
     formId: number;
-    ingredientId: string;
     ingredient: TIngredient | null;
 };
 
@@ -33,24 +32,31 @@ const RecipeForm = () => {
     ]);
 
     const pathname = usePathname();
-    const isNew = pathname.includes('/new');
+    const params = useParams();
+    const router = useRouter();
+    
+    const isNewRecipe = pathname.includes('/new');
 
     const { addRecipe, updateRecipe, recipesState: { error: recipeError } } = useRecipesState();
     const { ingredientsState: { data: allIngredients } } = useIngredientsState();
 
     useEffect(() => {
-        if (isNew) return;
+        if (isNewRecipe) return;
 
         try {
             const getEditingRecipe = async () => {
-                const recipeId = getRecipeIdFromUrl(pathname);
-                const recipe = await getRecipe(recipeId);
+                const recipeId = params.id as string;
+                const recipeResponse = await getRecipe(recipeId);
 
-                if (recipe.status === 'error' || !recipe.data) {
-                    setError(recipe.message ?? '');
+                if (recipeResponse.status === 'error' || !recipeResponse.data) {
+                    setError(recipeResponse.message ?? '');
                 } else {
                     setError(null);
-                    setFormData(recipe.data);
+                    setFormData({
+                        ...initFormData,
+                        name: recipeResponse.data.name,
+                        description: recipeResponse.data.description,
+                    });
                 }
             }
 
@@ -123,13 +129,13 @@ const RecipeForm = () => {
         event.preventDefault();
 
         startTransition(async () => {
-            if (isNew) {
+            if (isNewRecipe) {
                 const validatedIngredients = ingredients
                     .filter(ingr => !!ingr.ingredient)
                     .map(({ ingredient, ingredientId, quantity }) => ({ ingredient, ingredientId, quantity }))
 
                 if (!validatedIngredients.length) {
-                    setError('Recipe cannot be without ingredients');
+                    setError(formsConfig.noIngredientsMsg);
                     return;
                 } else {
                     setError(null);
@@ -140,7 +146,7 @@ const RecipeForm = () => {
                     ingredients: validatedIngredients as IRecipeIngredient[],
                 });
             } else {
-                const recipeId = getRecipeIdFromUrl(pathname);
+                const recipeId = params.id as string;
                 await updateRecipe(recipeId, formData);
             }
     
@@ -208,13 +214,13 @@ const RecipeForm = () => {
 
             <Button onPress={addIngredient} isDisabled={isAddingIngredientsDisabled}>+</Button>
 
-            {isNew
+            {isNewRecipe
                 ? (
                     <Button type="submit" isPending={isPending}>Add recipe</Button>
                 ) : (
                     <>
                         <Button type="submit" isPending={isPending}>Save</Button>
-                        <Button isPending={isPending} onPress={() => navigate('/')}>Cancel</Button>
+                        <Button onPress={() => router.push('/')}>Cancel</Button>
                     </>
                 )
             }
