@@ -28,3 +28,9 @@ export interface IOption {
     value: string;
     label: string;
 }
+
+export type NotNullableProps<T, K extends keyof T> = { [P in K]: Exclude<T[K], null | undefined> } & Omit<T, K>;
+
+// type ExtractNotNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] };
+
+// export type NotNullableProps2<T, K extends keyof T> = ExtractNotNever<NotNullableProps<T, K>>;

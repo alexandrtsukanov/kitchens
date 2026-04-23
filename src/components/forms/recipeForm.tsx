@@ -4,7 +4,7 @@ import { Button, Form } from "@heroui/react";
 import { ChangeEvent, SyntheticEvent, useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import Input from "../UI/input";
 import { formsConfig } from "@/config";
-import { IRecipeForm, IRecipeIngredient } from "@/model";
+import { IRecipeForm, IRecipeIngredient, NotNullableProps } from "@/model";
 import IngredientAndQuantityForm from "../layout/IngredientAndQuantityForm";
 import { useRecipesState } from "@/store/recipe";
 import { usePathname } from "next/navigation";
@@ -19,24 +19,17 @@ const initFormData: IRecipeForm = {
     ingredients: [],
 }
 
-type IRecipeIngridientForm = Pick<IRecipeIngredient, 'quantity'> & {
+type IRecipeIngridientForm = Pick<IRecipeIngredient, 'quantity' | 'ingredientId'> & {
     formId: number;
-    ingredientId: string | null;
+    ingredientId: string;
     ingredient: TIngredient | null;
 };
-
-const mapIngredient = (rawIngredient: IRecipeIngridientForm): IRecipeIngredient | null => {
-    const { ingredient, ingredientId, quantity } = rawIngredient;
-    if (!ingredient || !ingredientId) return null;
-
-    return { ingredient, ingredientId, quantity };
-}
 
 const RecipeForm = () => {
     const [formData, setFormData] = useState<IRecipeForm>(initFormData);
     const [error, setError] = useState<string | null>(null);
     const [ingredients, setIngredients] = useState<IRecipeIngridientForm[]>([
-        { ingredientId: null, ingredient: null, quantity: 1, formId: Math.random() },
+        { ingredientId: '', ingredient: null, quantity: 1, formId: Math.random() },
     ]);
 
     const pathname = usePathname();
@@ -89,7 +82,7 @@ const RecipeForm = () => {
     }, []);
 
     const addIngredient = useCallback(() => {
-        setIngredients(prev => [...prev, { ingredientId: '', quantity: 1, formId: Math.random() }]);
+        setIngredients(prev => [...prev, { ingredientId: '', ingredient: null, quantity: 1, formId: Math.random() }]);
     }, [])
 
     const removeIngredient = useCallback((id: number) => {
@@ -132,8 +125,8 @@ const RecipeForm = () => {
         startTransition(async () => {
             if (isNew) {
                 const validatedIngredients = ingredients
-                    .map(mapIngredient)
-                    .filter(Boolean)
+                    .filter(ingr => !!ingr.ingredient)
+                    .map(({ ingredient, ingredientId, quantity }) => ({ ingredient, ingredientId, quantity }))
 
                 if (!validatedIngredients.length) {
                     setError('Recipe cannot be without ingredients');
