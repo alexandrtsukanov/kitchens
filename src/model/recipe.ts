@@ -20,3 +20,8 @@ export type TRecipe = Omit<IRecipeForm, 'imageUrl'> & {
     updatedAt?: Date | string;
     imageUrl: string | null;
 };
+
+export type IRecipeIngridientForm = Pick<IRecipeIngredient, 'quantity' | 'ingredientId'> & {
+    formId: number;
+    ingredient: TIngredient | null;
+};

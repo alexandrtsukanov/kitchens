@@ -65,7 +65,7 @@ const RegistrationForm = ({ onClose }: IProps) => {
         console.log('createUserResult =>', createdUser);
 
         if (createdUser.status && createdUser.status === 'error') {
-            setError(createdUser.message);
+            setError(createdUser.message || '');
 
             return;
         } else {

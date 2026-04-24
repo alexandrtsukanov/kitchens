@@ -16,19 +16,22 @@ const RecipesList = () => {
     // const recipesRendered = useMemo(() => {}, [recipes]);
 
     return (
-        <div>
+        <div className="flex flex-col items-center">
             {isAuth && <Button onPress={() => router.push('/recipes/new')}>Create recipe</Button>}
 
-            {recipes.map(({ name, description, imageUrl, id, ingredients }) => (
-                <RecipeCard
-                    key={id}
-                    id={id}
-                    name={name}
-                    description={description}
-                    ingredients={ingredients} 
-                    {...(imageUrl && { imageUrl })}                   
-                />
-            ))}
+            <div className="flex flex-wrap gap-4 w-[480px]">
+                {recipes.map(({ name, description, imageUrl, id, ingredients }) => (
+                    <RecipeCard
+                        key={id}
+                        id={id}
+                        name={name}
+                        description={description}
+                        ingredients={ingredients} 
+                        {...(imageUrl && { imageUrl })}                   
+                    />
+                ))}
+            </div>
+
         </div>
     );
 };

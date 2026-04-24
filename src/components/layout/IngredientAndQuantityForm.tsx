@@ -6,15 +6,13 @@ import Input from '../UI/input';
 import { Button } from '@heroui/react';
 import { IOption, TIngredient } from '@/model';
 import { useIngredientsState } from '@/store/ingredients';
+import { formsConfig } from '@/config';
+import { useIngredient } from '@/hooks/useIngredient.';
 
 interface IProps {
-    onIngredientChange: (id: number, value: string) => void,
-    onQuantityChange: (id: number, value: number) => void,
-    onRemove: (id: number) => void,
     ingredientValue: string,
     quantityValue: string,
     formId: number,
-    validateQuantity: (value: string) => void,
 }
 
 const createIngredientOptions = (data: TIngredient[]): IOption[]=> {
@@ -22,30 +20,35 @@ const createIngredientOptions = (data: TIngredient[]): IOption[]=> {
 }
 
 const IngredientAndQuantityForm = memo(({
-    onIngredientChange,
-    onQuantityChange,
-    onRemove,
     ingredientValue,
     quantityValue,
     formId,
-    validateQuantity,
 }: IProps) => {
     const { ingredientsState: { data: allIngredients } } = useIngredientsState();
 
-    const onOwnIngredientChange = useCallback((value: string) => {
-        onIngredientChange(formId, value)
-    }, [onIngredientChange]);
+    const { changeIngredient, changeQuantity, removeIngredient } = useIngredient();
 
+    const onIngredientChange = useCallback((value: string) => {
+        changeIngredient(formId, value);
+    }, [changeIngredient]);
 
-    const onOwnQuantityChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const onQuantityChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         const value = !event.target.value || isNaN(parseFloat(event.target.value)) ? parseFloat(event.target.value) : 1;
 
-        onQuantityChange(formId, value);
-    }, [onQuantityChange]);
+        changeQuantity(formId, value);
+    }, [changeQuantity]);
 
-    const onOwnRemove = () => {
-        onRemove(formId);
-    }
+    const onRemove = () => {
+        removeIngredient(formId);
+    };
+
+    const validateQuantity = useCallback((value: string) => {
+        if (isNaN(parseFloat(value)))  {
+            return formsConfig.quantityMustBeNumber;
+        }
+
+        return true;
+    }, []);
 
     return (
         <div className="flex gap-4 w-full">
@@ -53,7 +56,7 @@ const IngredientAndQuantityForm = memo(({
                 <Select
                     options={createIngredientOptions(allIngredients)}
                     label="Ingredient"
-                    onChange={onOwnIngredientChange}    
+                    onChange={onIngredientChange}    
                     value={ingredientValue}
                     placeholder="select ingredient"
                 />
@@ -63,7 +66,7 @@ const IngredientAndQuantityForm = memo(({
                 <Input
                     label="Amount"
                     name="number"
-                    onChange={onOwnQuantityChange}
+                    onChange={onQuantityChange}
                     placeholder="amount"
                     validate={validateQuantity}
                     value={quantityValue}                       
@@ -71,7 +74,7 @@ const IngredientAndQuantityForm = memo(({
             </div>
 
             <div className="w-1/9">
-                <Button onPress={onOwnRemove}>-</Button>
+                <Button onPress={onRemove}>-</Button>
             </div>
         </div>
     );

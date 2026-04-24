@@ -26,13 +26,13 @@ const RecipeCard = ({
     }
 
     return (
-        <Card>
+        <Card className="max-h-32 w-1/3">
             <Image src={imageUrl ?? '/'} className="" alt={name} />
             <Card.Content>
                 <Card.Title>{name}</Card.Title>
                 <Card.Description>{description}</Card.Description>
 
-                <ul>
+                <ul className="max-h-16 overflow-y-scroll">
                    {ingredients.map(({ id, ingredient, quantity }) => (
                         <li key={id}>
                             {ingredient.name} {quantity}
