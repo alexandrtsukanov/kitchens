@@ -52,6 +52,7 @@ const RecipeForm = () => {
                         ...initFormData,
                         name: recipeResponse.data.name,
                         description: recipeResponse.data.description,
+                        imageUrl: recipeResponse.data.imageUrl ?? '',
                     });
                 }
             }
@@ -176,7 +177,7 @@ const RecipeForm = () => {
                 ) : (
                     <div className="flex gap-2">
                         <Button type="submit" isPending={isPending}>Save</Button>
-                        <Button onPress={() => router.push('/')}>Cancel</Button>
+                        <Button onPress={() => router.push('/')} variant="danger-soft">Cancel</Button>
                     </div>
                 )
             }
