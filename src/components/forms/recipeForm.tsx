@@ -174,10 +174,10 @@ const RecipeForm = () => {
                 ? (
                     <Button type="submit" isPending={isPending}>Add recipe</Button>
                 ) : (
-                    <>
+                    <div className="flex gap-2">
                         <Button type="submit" isPending={isPending}>Save</Button>
                         <Button onPress={() => router.push('/')}>Cancel</Button>
-                    </>
+                    </div>
                 )
             }
         </Form>
