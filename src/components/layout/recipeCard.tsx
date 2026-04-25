@@ -26,8 +26,14 @@ const RecipeCard = ({
     }
 
     return (
-        <Card className="max-h-32 w-1/3">
-            <Image src={imageUrl ?? '/'} className="" alt={name} />
+        <Card className="flex flex-col gap-2 items-center max-h-[360px] w-[calc(1/3 - 16px)]">
+            <Image
+                src={imageUrl ?? '/logo_tatar_kitchen.jpeg'}
+                className=""
+                alt={name}
+                height={64}
+                width={96}
+            />
             <Card.Content>
                 <Card.Title>{name}</Card.Title>
                 <Card.Description>{description}</Card.Description>
@@ -43,7 +49,7 @@ const RecipeCard = ({
 
             {isAuth && (
                 <Card.Footer>
-                    <Button onPress={() => router.push(`/recipes/${id}`)}>Edit</Button>
+                    <Button onPress={() => router.push(`/recipes/${id}`)} variant="secondary">Edit</Button>
                     <Button onPress={onRemoveRecipe} variant="danger-soft">Remove</Button>
                 </Card.Footer>
             )}

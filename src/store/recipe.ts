@@ -18,7 +18,7 @@ export const useRecipesState = create<IRecipesState>((set) => ({
     recipesState: {
         data: [],
         error: null,
-        isLoading: false,
+        isLoading: true,
     },
     setRecipes: async () => {
         set(prev => ({ ...prev, recipesState: { ...prev.recipesState, isLoading: true, error: null } }));

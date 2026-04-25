@@ -7,12 +7,14 @@ import { Button } from '@heroui/react';
 import { IOption, TIngredient } from '@/model';
 import { useIngredientsState } from '@/store/ingredients';
 import { formsConfig } from '@/config';
-import { useIngredient } from '@/hooks/useIngredient.';
 
 interface IProps {
-    ingredientValue: string,
-    quantityValue: string,
-    formId: number,
+    ingredientValue: string;
+    quantityValue: string;
+    formId: number;
+    changeIngredient: (id: number, value: string) => void;
+    changeQuantity: (id: number, value: number) => void;
+    removeIngredient: (id: number) => void;
 }
 
 const createIngredientOptions = (data: TIngredient[]): IOption[]=> {
@@ -23,17 +25,18 @@ const IngredientAndQuantityForm = memo(({
     ingredientValue,
     quantityValue,
     formId,
+    changeIngredient,
+    changeQuantity,
+    removeIngredient,
 }: IProps) => {
     const { ingredientsState: { data: allIngredients } } = useIngredientsState();
-
-    const { changeIngredient, changeQuantity, removeIngredient } = useIngredient();
 
     const onIngredientChange = useCallback((value: string) => {
         changeIngredient(formId, value);
     }, [changeIngredient]);
 
     const onQuantityChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        const value = !event.target.value || isNaN(parseFloat(event.target.value)) ? parseFloat(event.target.value) : 1;
+        const value = !event.target.value || isNaN(parseFloat(event.target.value)) ? 0 : parseFloat(event.target.value);
 
         changeQuantity(formId, value);
     }, [changeQuantity]);
@@ -51,7 +54,7 @@ const IngredientAndQuantityForm = memo(({
     }, []);
 
     return (
-        <div className="flex gap-4 w-full">
+        <div className="flex items-end gap-4 w-full">
             <div className="w-6/3">
                 <Select
                     options={createIngredientOptions(allIngredients)}
@@ -74,7 +77,7 @@ const IngredientAndQuantityForm = memo(({
             </div>
 
             <div className="w-1/9">
-                <Button onPress={onRemove}>-</Button>
+                <Button onPress={onRemove} variant="danger-soft">-</Button>
             </div>
         </div>
     );

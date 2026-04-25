@@ -8,6 +8,7 @@ interface ISiteConfig {
     ingredientsTableHeaderItems: string[],
     errorMessageKey: string,
     permissionDeniedMsg: string,
+    noResipesYet: string;
 }
 
 export const siteConfig: ISiteConfig = {
@@ -52,4 +53,5 @@ export const siteConfig: ISiteConfig = {
     ],
     errorMessageKey: 'message',
     permissionDeniedMsg: '403 not available',
+    noResipesYet: 'No resipes yet',
 };

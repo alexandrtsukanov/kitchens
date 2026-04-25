@@ -6,10 +6,10 @@ import { siteConfig } from "./config";
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const token = await getToken({ req: request, secret: process.env.AUTH_SECRET });
-    const protectedRoutes: TPage[] = ['/ingredients'];
-    const outerRoutes = ['/error'];
+    const protectedRoutes: (TPage | string)[] = ['/ingredients', '/recipes'];
+    const outerRoutes: (TPage | string)[]  = ['/error'];
 
-    if (protectedRoutes.some(route => pathname.toString().startsWith(route))) {
+    if (protectedRoutes.some(route => pathname.startsWith(route))) {
         if (!token) {
             const url = new URL('/error', request.url);
             url.searchParams.set(siteConfig.errorMessageKey, siteConfig.permissionDeniedMsg);
@@ -28,5 +28,5 @@ export async function proxy(request: NextRequest) {
 };
 
 export const config = {
-    matcher: ['/ingredients', '/error'],
+    matcher: ['/ingredients', '/error', '/recipes/new', '/recipes/:id'],
 }

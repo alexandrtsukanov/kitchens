@@ -8,7 +8,7 @@ const ErrorPage = () => {
     const message = searchParams.get(siteConfig.errorMessageKey) ?? 'Unknown error';
 
     return (
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center h-full w-full">
             <p className="text-red-500 text-3xl">{message}</p>
         </div>
     )

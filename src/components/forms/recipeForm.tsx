@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Form } from "@heroui/react";
-import { ChangeEvent, SyntheticEvent, useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import { ChangeEvent, SyntheticEvent, useCallback, useEffect, useState, useTransition } from "react";
 import { formsConfig } from "@/config";
 import { IRecipeForm, IRecipeIngredient, IRecipeIngridientForm } from "@/model";
 import { useRecipesState } from "@/store/recipe";
@@ -10,29 +10,31 @@ import { getRecipe } from "@/actions/recipes";
 import { useIngredientsState } from "@/store/ingredients";
 import RecipeFormData from "../layout/recipeFormData";
 import RecipeIngredients from "../layout/recipeIngredients";
-import { useIngredient } from "@/hooks/useIngredient.";
 
 const initFormData: IRecipeForm = {
     name: '',
     description: '',
     imageUrl: '',
     ingredients: [],
-}
+};
+
+const initIngredients = [
+    { ingredientId: '', ingredient: null, quantity: 1, formId: Math.random() },
+];
 
 const RecipeForm = () => {
     const [formData, setFormData] = useState<IRecipeForm>(initFormData);
     const [error, setError] = useState<string | null>(null);
+    const [ingredients, setIngredients] = useState<IRecipeIngridientForm[]>(initIngredients);
 
     const pathname = usePathname();
-    const params = useParams();
+    const params = useParams<{ id: string }>();
     const router = useRouter();
 
     const isNewRecipe = pathname.includes('/new');
 
     const { addRecipe, updateRecipe, recipesState: { error: recipeError } } = useRecipesState();
     const { ingredientsState: { data: allIngredients } } = useIngredientsState();
-
-    const { ingredients } = useIngredient();
 
     useEffect(() => {
         if (isNewRecipe) return;
@@ -59,6 +61,32 @@ const RecipeForm = () => {
             const ownError = error as Error;
             setError(ownError.message);
         }
+    }, []);
+
+    const changeIngredient = useCallback((id: number, value: string) => {
+        const ingredient = allIngredients.find(ingr => ingr.id === value);
+
+        if (!ingredient) return;
+
+        setIngredients(prev => prev.map(ingr => ingr.formId === id ? { ...ingr, ingredientId: value, ingredient } : ingr));
+    }, [allIngredients]);
+
+    const changeQuantity = useCallback((id: number, value: number) => {
+        setIngredients(prev => prev.map(ingr => ingr.formId === id ? { ...ingr, quantity: value } : ingr));
+    }, []);
+
+    const addIngredient = useCallback(() => {
+        setIngredients(prev => [...prev, { ingredientId: '', ingredient: null, quantity: 1, formId: Math.random() }]);
+    }, [])
+
+    const removeIngredient = useCallback((id: number) => {
+        setIngredients(prev => {
+            if (prev.length === 1) {
+                return prev;
+            }
+
+            return prev.filter(ingr => ingr.formId !== id);
+        });
     }, []);
 
     const changeName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -104,11 +132,11 @@ const RecipeForm = () => {
                     ingredients: validatedIngredients as IRecipeIngredient[],
                 });
             } else {
-                const recipeId = params.id as string;
+                const recipeId = params.id;
                 await updateRecipe(recipeId, formData);
             }
     
-            if (!!recipeError) {
+            if (recipeError) {
                 setError(recipeError);
 
                 return;
@@ -116,7 +144,7 @@ const RecipeForm = () => {
                 setError(null);
             }
             
-            setFormData(initFormData);
+            router.push('/');
         });
     };
     
@@ -134,7 +162,13 @@ const RecipeForm = () => {
                 imageUrl={formData.imageUrl}
             />
 
-            <RecipeIngredients />
+            <RecipeIngredients
+                ingredients={ingredients}
+                changeIngredient={changeIngredient}
+                changeQuantity={changeQuantity}
+                addIngredient={addIngredient}
+                removeIngredient={removeIngredient}
+            />
 
             {isNewRecipe
                 ? (
@@ -146,8 +180,6 @@ const RecipeForm = () => {
                     </>
                 )
             }
-
-            <Button type="submit" isPending={isPending}>Add recipe</Button>
         </Form>
     )
 }

@@ -6,7 +6,6 @@ import Header from "@/components/layout/header";
 import { siteConfig, layoutConfig } from "@/config";
 import Providers from "@/providers";
 import Loader from "@/hocs/loader";
-import Title from "@/components/layout/title";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -40,7 +39,6 @@ export default function RootLayout({
                             <div className="flex flex-col">
                                 <Header />
                                 <main className="flex flex-col w-full justify-start items-center">
-                                    <Title />
                                     {children}
                                 </main>
                             </div>

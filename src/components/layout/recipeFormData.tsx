@@ -22,7 +22,7 @@ const RecipeData = ({
     imageUrl,
 }: IProps) => {
     return (
-        <div>
+        <>
             <Input
                 label="Ingredient name"
                 name="name"
@@ -47,7 +47,7 @@ const RecipeData = ({
                 placeholder="Insert image URL (not required)"
                 value={imageUrl ?? ''}
             />
-        </div>
+        </>
     )
 }
 

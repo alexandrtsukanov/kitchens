@@ -8,6 +8,14 @@ const nextConfig: NextConfig = {
     // Sets the absolute path for module resolution
     root: path.join(__dirname, '..'), 
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

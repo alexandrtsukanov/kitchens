@@ -16,9 +16,6 @@ const Loader = ({ children }: IProps) => {
     const { setIngredients } = useIngredientsState();
     const { setRecipes } = useRecipesState();
 
-    console.log('session =>', session);
-    console.log('status =>', status);
-
     useEffect(() => {
         setRecipes();
     }, []);
