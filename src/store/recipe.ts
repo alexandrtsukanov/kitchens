@@ -88,7 +88,7 @@ export const useRecipesState = create<IRecipesState>((set) => ({
                     ...prev.recipesState,
                     data: prev.recipesState.data.map(recipe => recipe.id === updatedRecipe.id ? updatedRecipe as TRecipe : recipe) },
             }));
-        } catch(err) {
+        } catch(err) {            
             const error = err as Error;
             set(prev => ({ ...prev, recipesState: { ...prev.recipesState, error: error.message } }));
         } finally {
@@ -107,6 +107,7 @@ export const useRecipesState = create<IRecipesState>((set) => ({
             }
 
             const { data: removedRecipe } = removeRecipeResponse;
+            console.log(removedRecipe);
 
             set(prev => ({
                 ...prev,
@@ -115,6 +116,7 @@ export const useRecipesState = create<IRecipesState>((set) => ({
                     data: prev.recipesState.data.filter(recipe => recipe.id !== removedRecipe.id) },
             }));
         } catch(err) {
+            console.log(err);
             const error = err as Error;
             set(prev => ({ ...prev, recipesState: { ...prev.recipesState, error: error.message } }));
         } finally {

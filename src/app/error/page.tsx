@@ -1,6 +1,6 @@
 'use client';
 
-import { siteConfig } from "@/config";
+import { layoutConfig, siteConfig } from "@/config";
 import { useSearchParams } from "next/navigation";
 
 const ErrorPage = () => {
@@ -8,7 +8,10 @@ const ErrorPage = () => {
     const message = searchParams.get(siteConfig.errorMessageKey) ?? 'Unknown error';
 
     return (
-        <div className="flex justify-center items-center h-full w-full">
+        <div
+            className="flex justify-center items-center"
+            style={{ height: `calc(100vh - ${layoutConfig.headerHeight} - ${layoutConfig.footerHeight})` }}
+        >
             <p className="text-red-500 text-3xl">{message}</p>
         </div>
     )

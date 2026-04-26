@@ -32,6 +32,13 @@ export async function getRecipe(id: string) {
     try {
         const recipe = await prisma.recipe.findUnique({
             where: { id },
+            include: {
+                ingredients: {
+                    include: {
+                        ingredient: true,
+                    }
+                }
+            }
         });
 
         return { status: 'ok', data: recipe };
@@ -148,8 +155,8 @@ export async function updateRecipe(id: string, recipeData: IRecipeForm) {
 
 export async function removeRecipe(id: string) {
     try {
-        const deletedRecipe = await prisma.recipe.delete({ where: { id } });
         await prisma.recipeIngredient.deleteMany({ where: { recipeId: id } });
+        const deletedRecipe = await prisma.recipe.delete({ where: { id } });
 
         return { status: 'ok', data: deletedRecipe };
     } catch (error) {

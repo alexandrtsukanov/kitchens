@@ -10,9 +10,6 @@ import { Button, Table as DefaultTable } from "@heroui/react";
 const IngredientsTable = memo(() => {
     const { ingredientsState: { data, isLoading }, removeIngredient } = useIngredientsState();
 
-    console.log('ingredients =>', data);
-    
-
     const deleteIngredient = async (id: string) => {
         await removeIngredient(id);
     }

@@ -2,11 +2,10 @@
 
 import { Button, Form } from "@heroui/react";
 import { ChangeEvent, SyntheticEvent, useCallback, useEffect, useState, useTransition } from "react";
-import { formsConfig } from "@/config";
+import { formsConfig, siteConfig } from "@/config";
 import { IRecipeForm, IRecipeIngredient, IRecipeIngridientForm } from "@/model";
 import { useRecipesState } from "@/store/recipe";
 import { usePathname, useParams, useRouter } from "next/navigation";
-import { getRecipe } from "@/actions/recipes";
 import { useIngredientsState } from "@/store/ingredients";
 import RecipeFormData from "../layout/recipeFormData";
 import RecipeIngredients from "../layout/recipeIngredients";
@@ -31,38 +30,32 @@ const RecipeForm = () => {
     const params = useParams<{ id: string }>();
     const router = useRouter();
 
-    const isNewRecipe = pathname.includes('/new');
+    const isNewRecipe = pathname.includes(siteConfig.isNewRecipePath);
 
-    const { addRecipe, updateRecipe, recipesState: { error: recipeError } } = useRecipesState();
+    const { addRecipe, updateRecipe, recipesState: { data: recipes, error: recipeError } } = useRecipesState();
     const { ingredientsState: { data: allIngredients } } = useIngredientsState();
 
     useEffect(() => {
-        if (isNewRecipe) return;
+        if (isNewRecipe || !recipes.length) return;
 
-        try {
-            const getEditingRecipe = async () => {
-                const recipeId = params.id as string;
-                const recipeResponse = await getRecipe(recipeId);
+        const recipeId = params.id;        
+        const recipeToUpdate = recipes.find(recipe => recipe.id === recipeId);
 
-                if (recipeResponse.status === 'error' || !recipeResponse.data) {
-                    setError(recipeResponse.message ?? '');
-                } else {
-                    setError(null);
-                    setFormData({
-                        ...initFormData,
-                        name: recipeResponse.data.name,
-                        description: recipeResponse.data.description,
-                        imageUrl: recipeResponse.data.imageUrl ?? '',
-                    });
-                }
-            }
-
-            getEditingRecipe();
-        } catch (error) {
-            const ownError = error as Error;
-            setError(ownError.message);
+        if (!recipeToUpdate) {
+            setError(siteConfig.recipeNotFound);
+        } else {
+            setError(null);
+            setFormData({
+                ...initFormData,
+                name: recipeToUpdate.name,
+                description: recipeToUpdate.description,
+                imageUrl: recipeToUpdate.imageUrl ?? '',
+            });
+            setIngredients(recipeToUpdate.ingredients.map(({ ingredientId, ingredient, quantity }) => ({
+                ingredientId, ingredient, quantity, formId: Math.random()
+            })));
         }
-    }, []);
+    }, [recipes]);
 
     const changeIngredient = useCallback((id: number, value: string) => {
         const ingredient = allIngredients.find(ingr => ingr.id === value);
@@ -100,7 +93,7 @@ const RecipeForm = () => {
         }
 
         return true;
-    }, []); 
+    }, [formData]); 
 
     const changeDescription = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         setFormData(prev => ({ ...prev, description: event.target.value }));
@@ -116,10 +109,9 @@ const RecipeForm = () => {
         event.preventDefault();
 
         startTransition(async () => {
-            if (isNewRecipe) {
-                const validatedIngredients = ingredients
-                    .filter(ingr => !!ingr.ingredient)
-                    .map(({ ingredient, ingredientId, quantity }) => ({ ingredient, ingredientId, quantity }))
+            const validatedIngredients = ingredients
+                .filter(ingr => !!ingr.ingredient)
+                .map(({ ingredient, ingredientId, quantity }) => ({ ingredient, ingredientId, quantity }));
 
                 if (!validatedIngredients.length) {
                     setError(formsConfig.noIngredientsMsg);
@@ -128,13 +120,17 @@ const RecipeForm = () => {
                     setError(null);
                 }
 
+            if (isNewRecipe) {
                 await addRecipe({
                     ...formData,
                     ingredients: validatedIngredients as IRecipeIngredient[],
                 });
             } else {
                 const recipeId = params.id;
-                await updateRecipe(recipeId, formData);
+                await updateRecipe(recipeId, {
+                    ...formData,
+                    ingredients: validatedIngredients as IRecipeIngredient[],
+                });
             }
     
             if (recipeError) {

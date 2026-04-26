@@ -16,3 +16,11 @@ export const UNIT_OPTIONS: IOption[] = [
     { value: 'MILLILITERS', label: 'Mililiters' },
     { value: 'PIECES', label: 'Pieces' },
 ] as const;
+
+export const unitBriefings: Record<string, string> = {
+    KILOGRAMS: 'kg',
+    GRAMS: 'g',
+    LITERS: 'l',
+    MILLILITERS: 'ml',
+    PIECES: 'pc',
+}

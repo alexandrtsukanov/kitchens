@@ -1,11 +1,13 @@
 'use client';
 
-import { useRouter } from "next/navigation";
+import { siteConfig } from "@/config";
+import { unitBriefings } from "@/consts/ingredients";
 import { IRecipeForm } from "@/model/recipe";
 import { useAuthState } from "@/store/auth";
 import { useRecipesState } from "@/store/recipe";
 import { Button, Card } from "@heroui/react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface IProps extends IRecipeForm { id: string };
 
@@ -19,17 +21,18 @@ const RecipeCard = ({
     const { removeRecipe } = useRecipesState();
     const { authState: { isAuth } } = useAuthState();
 
-    const router = useRouter();
-
-    const onRemoveRecipe = () => {
-        removeRecipe(id);
+    const onRemoveRecipe = async () => {
+        try {
+            await removeRecipe(id);
+        } catch(error) {
+            alert(siteConfig.errorRecipeRemoveMsg);
+        }
     }
 
     return (
         <Card className="flex flex-col gap-2 items-center max-h-[360px] w-[calc(1/3 - 16px)]">
             <Image
                 src={imageUrl ?? '/logo_tatar_kitchen.jpeg'}
-                className=""
                 alt={name}
                 height={64}
                 width={96}
@@ -41,7 +44,7 @@ const RecipeCard = ({
                 <ul className="max-h-16 overflow-y-scroll">
                    {ingredients.map(({ id, ingredient, quantity }) => (
                         <li key={id}>
-                            {ingredient.name} {quantity}
+                            {ingredient.name} {quantity} {unitBriefings[ingredient.unit] ?? 'pc'}
                         </li>
                    ))} 
                 </ul>
@@ -49,7 +52,9 @@ const RecipeCard = ({
 
             {isAuth && (
                 <Card.Footer>
-                    <Button onPress={() => router.push(`/recipes/${id}`)} variant="secondary">Edit</Button>
+                    <Link href={`/recipes/${id}`}>
+                        <Button variant="secondary">Edit</Button>
+                    </Link>
                     <Button onPress={onRemoveRecipe} variant="danger-soft">Remove</Button>
                 </Card.Footer>
             )}
