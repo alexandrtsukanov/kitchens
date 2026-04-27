@@ -24,10 +24,10 @@ const RecipeData = ({
     return (
         <>
             <Input
-                label="Ingredient name"
+                label="Recipe name"
                 name="name"
                 onChange={changeName}
-                placeholder="enter ingredient name"
+                placeholder="enter recipe name"
                 validate={validateName}
                 value={name}
             />
