@@ -18,7 +18,7 @@ const RecipesList = () => {
     return (
         <div className="flex flex-col items-center">
             {isAuth && 
-                <Link href={`/recipes/${siteConfig.isNewRecipePath}`}>
+                <Link href={`/recipes/${siteConfig.newRecipePath}`}>
                     <Button>Create recipe</Button>
                 </Link>
             }

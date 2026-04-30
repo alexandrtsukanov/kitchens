@@ -30,7 +30,7 @@ const RecipeForm = () => {
     const params = useParams<{ id: string }>();
     const router = useRouter();
 
-    const isNewRecipe = pathname.includes(siteConfig.isNewRecipePath);
+    const isNewRecipe = pathname.includes(siteConfig.newRecipePath);
 
     const { addRecipe, updateRecipe, recipesState: { data: recipes, error: recipeError } } = useRecipesState();
     const { ingredientsState: { data: allIngredients } } = useIngredientsState();

@@ -11,7 +11,7 @@ interface ISiteConfig {
     noResipesYet: string;
     errorRecipeRemoveMsg: string;
     recipeNotFound: string;
-    isNewRecipePath: string;
+    newRecipePath: string;
 }
 
 export const siteConfig: ISiteConfig = {
@@ -59,5 +59,5 @@ export const siteConfig: ISiteConfig = {
     noResipesYet: 'No resipes yet',
     errorRecipeRemoveMsg: 'Error remove recipe, try again',
     recipeNotFound: 'Recipe not found',
-    isNewRecipePath: '/new',
+    newRecipePath: '/new',
 };
